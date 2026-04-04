@@ -2,6 +2,8 @@
 
 Arduino library for the Texas Instruments DRV8704 dual H-bridge gate driver.
 
+Generated API docs are available at: https://uutzinger.github.io/Arduino_DRV8704/
+
 ## Purpose
 
 This library exposes the DRV8704 through one consistent control model:
