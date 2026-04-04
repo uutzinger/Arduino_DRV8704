@@ -1,0 +1,9 @@
+<map id="src/drv8704.h" name="src/drv8704.h">
+<area shape="rect" id="node1" title="Public Arduino API for the DRV8704 dual H&#45;bridge gate driver." alt="" coords="163,5,264,32"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,80,83,107"/>
+<area shape="rect" id="node3" title=" " alt="" coords="139,155,194,181"/>
+<area shape="rect" id="node4" href="$drv8704__defs_8h.html" title="Constants, register addresses, masks, and defaults for the DRV8704 driver." alt="" coords="158,80,269,107"/>
+<area shape="rect" id="node6" href="$drv8704__types_8h.html" title="Public enums and data structures for the DRV8704 driver." alt="" coords="293,80,411,107"/>
+<area shape="rect" id="node7" href="$drv8704__regs__typedefs_8h.html" title="Typed register views for the DRV8704 register set." alt="" coords="436,80,604,107"/>
+<area shape="rect" id="node5" title=" " alt="" coords="319,155,385,181"/>
+</map>

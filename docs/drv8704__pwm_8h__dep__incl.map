@@ -1,0 +1,8 @@
+<map id="src/drv8704_pwm.h" name="src/drv8704_pwm.h">
+<area shape="rect" id="node1" title="Shared abstraction for platform PWM generation backends." alt="" coords="435,5,571,32"/>
+<area shape="rect" id="node2" href="$drv8704__bridge_8cpp.html" title="Runtime bridge GPIO helpers for the DRV8704 driver." alt="" coords="5,80,163,107"/>
+<area shape="rect" id="node3" href="$drv8704__pwm__esp32_8cpp.html" title="ESP32 LEDC backend for DRV8704 PWM input generation." alt="" coords="187,80,379,107"/>
+<area shape="rect" id="node4" href="$drv8704__pwm__general_8cpp.html" title="Generic Arduino analogWrite backend for DRV8704 PWM input generation." alt="" coords="403,80,602,107"/>
+<area shape="rect" id="node5" href="$drv8704__pwm__stm_8cpp.html" title="STM hardware&#45;PWM backend for DRV8704 PWM input generation." alt="" coords="627,80,805,107"/>
+<area shape="rect" id="node6" href="$drv8704__pwm__teensy_8cpp.html" title="Teensy hardware&#45;PWM backend for DRV8704 PWM input generation." alt="" coords="829,80,1024,107"/>
+</map>

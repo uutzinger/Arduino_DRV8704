@@ -1,0 +1,26 @@
+var searchData=
+[
+  ['setblanktime_422',['setBlankTime',['../classDRV8704.html#a39f2b7faf69055531ab9ee11fadf6bc4',1,'DRV8704']]],
+  ['setbridgemode_423',['setBridgeMode',['../classDRV8704.html#a1545e79986e19592060f43c1b67f2014',1,'DRV8704']]],
+  ['setcurrent_424',['setCurrent',['../classDRV8704.html#a291893149e5d02fa2719739b060b24c8',1,'DRV8704::setCurrent(BridgeId bridge, float amps)'],['../classDRV8704.html#a040580d129f34e698b2aff771dcd0e82',1,'DRV8704::setCurrent(BridgeId bridge, Direction direction, float amps)']]],
+  ['setcurrentlimit_425',['setCurrentLimit',['../classDRV8704.html#ae7fbf7c02abdd2b92e29422767a1f167',1,'DRV8704']]],
+  ['setcurrentmodepreset_426',['setCurrentModePreset',['../classDRV8704.html#a955f0bedd0cfb3b9f7cfaa269371a4c0',1,'DRV8704']]],
+  ['setdeadtime_427',['setDeadTime',['../classDRV8704.html#adf6a36a285751026438424348d9cf4ec',1,'DRV8704']]],
+  ['setdecaymode_428',['setDecayMode',['../classDRV8704.html#ab331b2349ec3006a547cf47a3083f75d',1,'DRV8704']]],
+  ['setdecaytime_429',['setDecayTime',['../classDRV8704.html#ac3614d01b635e002f7ee8d09de4d9ab9',1,'DRV8704']]],
+  ['setdirection_430',['setDirection',['../classDRV8704.html#ae9f0b8b79d0290da965b9c66d8e4d236',1,'DRV8704']]],
+  ['setgatedrive_431',['setGateDrive',['../classDRV8704.html#aee78a2e5485528d5c446b8698d13f084',1,'DRV8704']]],
+  ['setgatedrivecurrents_432',['setGateDriveCurrents',['../classDRV8704.html#a39ffa5ec3bd3dd5e1768d5e65256a751',1,'DRV8704']]],
+  ['setgatedrivetimes_433',['setGateDriveTimes',['../classDRV8704.html#a5d8e0447caafeb0c3ea390dc84af2890',1,'DRV8704']]],
+  ['setocpdeglitch_434',['setOcpDeglitch',['../classDRV8704.html#aa7f810c296c8431fe109f70e69e3da35',1,'DRV8704']]],
+  ['setocpthreshold_435',['setOcpThreshold',['../classDRV8704.html#a732c4b853867a4d93a76d0701ceefe12',1,'DRV8704']]],
+  ['setofftime_436',['setOffTime',['../classDRV8704.html#a2fbdc26a1d231be4dcd772fa029c42ae',1,'DRV8704']]],
+  ['setpwmfrequency_437',['setPwmFrequency',['../classDRV8704.html#ade54afa2aa1456ffe46c9ddf65170fbe',1,'DRV8704']]],
+  ['setsensegain_438',['setSenseGain',['../classDRV8704.html#a8966bf9ec77f9770a6db14d031d2158d',1,'DRV8704']]],
+  ['setshuntresistance_439',['setShuntResistance',['../classDRV8704.html#a7a69975fc1d221855dacbd10531b6071',1,'DRV8704::setShuntResistance(float ohms)'],['../classDRV8704.html#accd42203bb13f1586c5848b150a019ba',1,'DRV8704::setShuntResistance(BridgeId bridge, float ohms)']]],
+  ['setspeed_440',['setSpeed',['../classDRV8704.html#af62761480a8651ac72da10ed2a82050a',1,'DRV8704::setSpeed(BridgeId bridge, float speedPercent)'],['../classDRV8704.html#ad67b24aad4b1b6ff5bb32bf5704cca2a',1,'DRV8704::setSpeed(BridgeId bridge, Direction direction, float speedPercent)']]],
+  ['settorque_441',['setTorque',['../classDRV8704.html#a408fffa85528ec83ee479ce0e65a7f48',1,'DRV8704']]],
+  ['sleep_442',['sleep',['../classDRV8704.html#a76389632c7ecca25ff14f469e72f1b3f',1,'DRV8704']]],
+  ['smallestdutyincrementpercent_443',['smallestDutyIncrementPercent',['../classDRV8704.html#adf58c4523e61c73c5ec8e2d3435e677c',1,'DRV8704']]],
+  ['syncregistercache_444',['syncRegisterCache',['../classDRV8704.html#ae008c526f98a93e77b10450de0b0cb96',1,'DRV8704']]]
+];

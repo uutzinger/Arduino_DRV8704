@@ -1,0 +1,10 @@
+<map id="src/drv8704_regs_typedefs.h" name="src/drv8704_regs_typedefs.h">
+<area shape="rect" id="node1" title="Typed register views for the DRV8704 register set." alt="" coords="401,5,591,32"/>
+<area shape="rect" id="node2" href="$drv8704_8h.html" title="Public Arduino API for the DRV8704 dual H&#45;bridge gate driver." alt="" coords="445,80,547,107"/>
+<area shape="rect" id="node3" href="$drv8704_8cpp.html" title="Lifecycle and top&#45;level orchestration for the DRV8704 driver." alt="" coords="5,155,120,181"/>
+<area shape="rect" id="node4" href="$drv8704__bridge_8cpp.html" title="Runtime bridge GPIO helpers for the DRV8704 driver." alt="" coords="144,155,301,181"/>
+<area shape="rect" id="node5" href="$drv8704__comm_8cpp.html" title="SPI transport helpers for the DRV8704 driver." alt="" coords="326,155,485,181"/>
+<area shape="rect" id="node6" href="$drv8704__config_8cpp.html" title="Configuration helpers for the DRV8704 driver." alt="" coords="509,155,667,181"/>
+<area shape="rect" id="node7" href="$drv8704__current_8cpp.html" title="Current&#45;limit and current&#45;drive helpers for the DRV8704 driver." alt="" coords="691,155,853,181"/>
+<area shape="rect" id="node8" href="$drv8704__status_8cpp.html" title="Status and fault helpers for the DRV8704 driver." alt="" coords="878,155,1037,181"/>
+</map>

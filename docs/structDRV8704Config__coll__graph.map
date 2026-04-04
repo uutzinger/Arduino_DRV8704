@@ -1,0 +1,4 @@
+<map id="DRV8704Config" name="DRV8704Config">
+<area shape="rect" id="node1" title="High&#45;level DRV8704 configuration snapshot." alt="" coords="6,95,123,121"/>
+<area shape="rect" id="node2" href="$structGateDriveConfig.html" title="Gate&#45;drive configuration group." alt="" coords="5,5,124,32"/>
+</map>

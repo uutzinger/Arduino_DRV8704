@@ -1,0 +1,13 @@
+<map id="src/drv8704_defs.h" name="src/drv8704_defs.h">
+<area shape="rect" id="node1" title="Constants, register addresses, masks, and defaults for the DRV8704 driver." alt="" coords="704,5,837,32"/>
+<area shape="rect" id="node2" href="$drv8704_8h.html" title="Public Arduino API for the DRV8704 dual H&#45;bridge gate driver." alt="" coords="445,80,547,107"/>
+<area shape="rect" id="node9" href="$drv8704__pwm__esp32_8cpp.html" title="ESP32 LEDC backend for DRV8704 PWM input generation." alt="" coords="571,80,763,107"/>
+<area shape="rect" id="node10" href="$drv8704__pwm__stm_8cpp.html" title="STM hardware&#45;PWM backend for DRV8704 PWM input generation." alt="" coords="787,80,965,107"/>
+<area shape="rect" id="node11" href="$drv8704__pwm__teensy_8cpp.html" title="Teensy hardware&#45;PWM backend for DRV8704 PWM input generation." alt="" coords="989,80,1184,107"/>
+<area shape="rect" id="node3" href="$drv8704_8cpp.html" title="Lifecycle and top&#45;level orchestration for the DRV8704 driver." alt="" coords="5,155,120,181"/>
+<area shape="rect" id="node4" href="$drv8704__bridge_8cpp.html" title="Runtime bridge GPIO helpers for the DRV8704 driver." alt="" coords="144,155,301,181"/>
+<area shape="rect" id="node5" href="$drv8704__comm_8cpp.html" title="SPI transport helpers for the DRV8704 driver." alt="" coords="326,155,485,181"/>
+<area shape="rect" id="node6" href="$drv8704__config_8cpp.html" title="Configuration helpers for the DRV8704 driver." alt="" coords="509,155,667,181"/>
+<area shape="rect" id="node7" href="$drv8704__current_8cpp.html" title="Current&#45;limit and current&#45;drive helpers for the DRV8704 driver." alt="" coords="691,155,853,181"/>
+<area shape="rect" id="node8" href="$drv8704__status_8cpp.html" title="Status and fault helpers for the DRV8704 driver." alt="" coords="878,155,1037,181"/>
+</map>

@@ -1,0 +1,19 @@
+var searchData=
+[
+  ['a_0',['A',['../drv8704__types_8h.html#ab3aec0278fddc9d5c1bdc747ae6c4af3a7fc56270e7a70fa81a5935b72eacbe29',1,'drv8704_types.h']]],
+  ['achievablemaxcurrentamps_1',['achievableMaxCurrentAmps',['../structDRV8704CurrentLimitResult.html#acff767084b038703511fd12bd5bf4b80',1,'DRV8704CurrentLimitResult']]],
+  ['achievedfrequencyhz_2',['achievedFrequencyHz',['../structDRV8704PwmCapability.html#ae1fbdb43a81ce872a222c31bb8d887fa',1,'DRV8704PwmCapability']]],
+  ['ain1pin_3',['ain1Pin',['../structDRV8704Pins.html#af0d2955b7e91067c96da7fb7dd1ba365',1,'DRV8704Pins']]],
+  ['ain2pin_4',['ain2Pin',['../structDRV8704Pins.html#a16c87ca12098b34eb0463510e92580e3',1,'DRV8704Pins']]],
+  ['all_5',['all',['../uniondrv8704__ctrl__reg__t.html#a5bd49d6e77a2d9a11b612c5dfb493960',1,'drv8704_ctrl_reg_t::all()'],['../uniondrv8704__torque__reg__t.html#ae0c8dc3ccb758bfc880ee8765d7be046',1,'drv8704_torque_reg_t::all()'],['../uniondrv8704__off__reg__t.html#a1b5a51776d8bb0e16a0aa250fcad9d1b',1,'drv8704_off_reg_t::all()'],['../uniondrv8704__blank__reg__t.html#a0d291b95caf0a2f788e1a1c2c7c25c59',1,'drv8704_blank_reg_t::all()'],['../uniondrv8704__decay__reg__t.html#a692d68ced790285a67cd210089ef022b',1,'drv8704_decay_reg_t::all()'],['../uniondrv8704__drive__reg__t.html#aca4e642c0c00ee8765d537e0608f03d9',1,'drv8704_drive_reg_t::all()'],['../uniondrv8704__status__reg__t.html#adbcaa87c090c4830ac3a3c9ff20b61b0',1,'drv8704_status_reg_t::all()']]],
+  ['ampspertorquecount_6',['ampsPerTorqueCount',['../structDRV8704CurrentLimitResult.html#aa113d0e327c9594e9445ba3b697a4a67',1,'DRV8704CurrentLimitResult']]],
+  ['aocp_7',['aocp',['../uniondrv8704__status__reg__t.html#a5fdbd36e1f828f511f375edc80125280',1,'drv8704_status_reg_t']]],
+  ['aocp_8',['Aocp',['../drv8704__types_8h.html#a23bbf8a33f262c242d8afee621e2d7a9a90696f3d111a2e593cdde9d3b013e7a3',1,'drv8704_types.h']]],
+  ['apdf_9',['apdf',['../uniondrv8704__status__reg__t.html#af80e04ae7eb5c9598e5548b797e5cb57',1,'drv8704_status_reg_t']]],
+  ['apdf_10',['Apdf',['../drv8704__types_8h.html#a23bbf8a33f262c242d8afee621e2d7a9ac9cac023a5cf62dfa9197e68ec72a3d2',1,'drv8704_types.h']]],
+  ['appliedcurrentlimitampsa_11',['appliedCurrentLimitAmpsA',['../structDRV8704CurrentLimitResult.html#abf5a5e027a59ac1ba2616c363a9507e4',1,'DRV8704CurrentLimitResult']]],
+  ['appliedcurrentlimitampsb_12',['appliedCurrentLimitAmpsB',['../structDRV8704CurrentLimitResult.html#abd971a16cd8f56100dde3348df1cb219',1,'DRV8704CurrentLimitResult']]],
+  ['applyconfig_13',['applyConfig',['../classDRV8704.html#ad44b44c5550c47d5e53afb0922fa0c2e',1,'DRV8704']]],
+  ['automixed_14',['AutoMixed',['../drv8704__types_8h.html#aa5ac647e57f4c8444491c51e5982af6aaa45fc141e82c04e451f635032f5b9da5',1,'drv8704_types.h']]],
+  ['available_15',['available',['../structDRV8704PwmCapability.html#aabca71172b4a1f8837ef9400d26d85f7',1,'DRV8704PwmCapability']]]
+];

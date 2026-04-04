@@ -1,0 +1,23 @@
+var searchData=
+[
+  ['b_16',['B',['../drv8704__types_8h.html#ab3aec0278fddc9d5c1bdc747ae6c4af3a9d5ed678fe57bcca610140957afab571',1,'drv8704_types.h']]],
+  ['backendtype_17',['backendType',['../structDRV8704PwmCapability.html#a3a531e66f6a647321e9a0da016edd177',1,'DRV8704PwmCapability']]],
+  ['begin_18',['begin',['../classDRV8704.html#a1653828fff8d8598a74537f852f0e43b',1,'DRV8704::begin()'],['../classDRV8704PwmBackend.html#aebb516554506b51bba9bf8bd845ccccd',1,'DRV8704PwmBackend::begin()']]],
+  ['beginpwmmode_19',['beginPwmMode',['../classDRV8704.html#a61bca9e0e7b0489d2ff408e9198b021f',1,'DRV8704']]],
+  ['bin1pin_20',['bin1Pin',['../structDRV8704Pins.html#a4db501ac21ae83517c523a3f33d9bc25',1,'DRV8704Pins']]],
+  ['bin2pin_21',['bin2Pin',['../structDRV8704Pins.html#abb7759bddc6c3d2949507ba4371cdbbb',1,'DRV8704Pins']]],
+  ['bit_22',['bit',['../uniondrv8704__ctrl__reg__t.html#a832b444a91c644d2a2bbc7ab7b9d3188',1,'drv8704_ctrl_reg_t::bit()'],['../uniondrv8704__torque__reg__t.html#a30f81245f58a481d3b5fae0bf2288a7f',1,'drv8704_torque_reg_t::bit()'],['../uniondrv8704__off__reg__t.html#abe858383b5378ec1ca5e7d26dabc546e',1,'drv8704_off_reg_t::bit()'],['../uniondrv8704__blank__reg__t.html#ab561a61cdc91e6cce1988725d23b6633',1,'drv8704_blank_reg_t::bit()'],['../uniondrv8704__decay__reg__t.html#a2b311d9f66d62dfa3573f7a488ecab1b',1,'drv8704_decay_reg_t::bit()'],['../uniondrv8704__drive__reg__t.html#a8d6b825e3b953e93dcfd546a557876d7',1,'drv8704_drive_reg_t::bit()'],['../uniondrv8704__status__reg__t.html#a58a2bd41eb44ba88b4032fcfceed8f25',1,'drv8704_status_reg_t::bit()']]],
+  ['blank_23',['Blank',['../drv8704__types_8h.html#a88cf26221b4e0243d81b74de4b223fc0ae4ef81cce7e4e10033ebb10962dfdd5e',1,'drv8704_types.h']]],
+  ['blanktime_24',['blankTime',['../structDRV8704CurrentPresetConfig.html#afe7e6e8694196dba0edee6cd784c144e',1,'DRV8704CurrentPresetConfig::blankTime()'],['../structDRV8704Config.html#a48f7bda1226ee5595d19a4576ad4f9e8',1,'DRV8704Config::blankTime()']]],
+  ['bocp_25',['bocp',['../uniondrv8704__status__reg__t.html#a7900ac79779499811515d8704bd86e25',1,'drv8704_status_reg_t']]],
+  ['bocp_26',['Bocp',['../drv8704__types_8h.html#a23bbf8a33f262c242d8afee621e2d7a9a56cb3cf56f0801b052966000aae87fae',1,'drv8704_types.h']]],
+  ['bpdf_27',['bpdf',['../uniondrv8704__status__reg__t.html#a232ac576d428b25e8f490120848154b0',1,'drv8704_status_reg_t']]],
+  ['bpdf_28',['Bpdf',['../drv8704__types_8h.html#a23bbf8a33f262c242d8afee621e2d7a9ab801f9af226b08376955ee2c8ea2cb3c',1,'drv8704_types.h']]],
+  ['brake_29',['brake',['../classDRV8704.html#a9cd983a40725834e7acf9b69dbcd9baf',1,'DRV8704']]],
+  ['brake_30',['Brake',['../drv8704__types_8h.html#af7fa5079f2831642b22404743565c06ea9af901a16c3d66abda1f656f0b7c4e15',1,'Brake():&#160;drv8704_types.h'],['../drv8704__types_8h.html#a74de79e66d01fd0a9e20cb2973c0318aa9af901a16c3d66abda1f656f0b7c4e15',1,'Brake():&#160;drv8704_types.h']]],
+  ['bridge_31',['bridge',['../structDRV8704BridgeState.html#a3b3c92f72dc18285ef7614e62115c63b',1,'DRV8704BridgeState']]],
+  ['bridgeid_32',['BridgeId',['../drv8704__types_8h.html#ab3aec0278fddc9d5c1bdc747ae6c4af3',1,'drv8704_types.h']]],
+  ['bridgemode_33',['BridgeMode',['../drv8704__types_8h.html#af7fa5079f2831642b22404743565c06e',1,'drv8704_types.h']]],
+  ['bridgeruntimestate_34',['BridgeRuntimeState',['../drv8704__types_8h.html#a74de79e66d01fd0a9e20cb2973c0318a',1,'drv8704_types.h']]],
+  ['bridgestate_35',['bridgeState',['../classDRV8704.html#abcb9f3a9c8cf02ae57bd2269326f47fa',1,'DRV8704']]]
+];
