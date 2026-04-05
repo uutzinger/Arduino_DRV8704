@@ -4,9 +4,16 @@
  */
 
 #include "drv8704.h"
+#include <logger.h>
 
 uint16_t DRV8704::readRegister(uint8_t address) {
-  if (!initialized_ || !isValidAddress(address)) {
+  if (!initialized_) {
+    LOGE("DRV8704 readRegister: device not initialized (address=0x%02X)", address);
+    return 0U;
+  }
+
+  if (!isValidAddress(address)) {
+    LOGE("DRV8704 readRegister: invalid address 0x%02X", address);
     return 0U;
   }
 
@@ -24,7 +31,15 @@ uint16_t DRV8704::readRegister(uint8_t address) {
 }
 
 bool DRV8704::writeRegister(uint8_t address, uint16_t value) {
-  if (!initialized_ || !isValidAddress(address)) {
+  if (!initialized_) {
+    LOGE("DRV8704 writeRegister: device not initialized (address=0x%02X, value=0x%04X)",
+         address,
+         value);
+    return false;
+  }
+
+  if (!isValidAddress(address)) {
+    LOGE("DRV8704 writeRegister: invalid address 0x%02X", address);
     return false;
   }
 
@@ -44,7 +59,13 @@ bool DRV8704::writeRegister(uint8_t address, uint16_t value) {
 }
 
 bool DRV8704::updateRegister(uint8_t address, uint16_t mask, uint16_t value) {
-  if (!initialized_ || !isValidAddress(address)) {
+  if (!initialized_) {
+    LOGE("DRV8704 updateRegister: device not initialized (address=0x%02X)", address);
+    return false;
+  }
+
+  if (!isValidAddress(address)) {
+    LOGE("DRV8704 updateRegister: invalid address 0x%02X", address);
     return false;
   }
 

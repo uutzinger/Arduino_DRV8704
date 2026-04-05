@@ -1,4 +1,5 @@
 #include <drv8704.h>
+#include <logger.h>
 
 namespace {
 
@@ -26,6 +27,7 @@ DRV8704& motorDriver() {
 void setup() {
   Serial.begin(115200);
   delay(1000);
+  currentLogLevel = LOG_LEVEL_INFO;
 
   DRV8704& driver = motorDriver();
   if (!driver.begin()) {

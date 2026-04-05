@@ -4,13 +4,24 @@
  */
 
 #include "drv8704.h"
+#include <logger.h>
 
 bool DRV8704::writeRegisterVerified(uint8_t address, uint16_t value, uint16_t verifyMask) {
   if (!writeRegister(address, value)) {
+    LOGE("DRV8704 writeRegisterVerified: write failed (address=0x%02X, value=0x%04X)",
+         address,
+         value);
     return false;
   }
 
   const uint16_t readback = readRegister(address);
+  if ((readback & verifyMask) != (value & verifyMask)) {
+    LOGE("DRV8704 writeRegisterVerified: verify failed (address=0x%02X, wrote=0x%04X, read=0x%04X, mask=0x%04X)",
+         address,
+         value,
+         readback,
+         verifyMask);
+  }
   return (readback & verifyMask) == (value & verifyMask);
 }
 
@@ -170,33 +181,47 @@ bool DRV8704::applyConfig(const DRV8704Config& config) {
   drive.bit.idriven = static_cast<uint16_t>(config.gateDrive.iDriveN);
   drive.bit.idrivep = static_cast<uint16_t>(config.gateDrive.iDriveP);
 
-  return writeRegisterVerified(
-             DRV8704_REG_CTRL,
-             ctrl.all,
-             DRV8704_CTRL_ENBL_MASK | DRV8704_CTRL_ISGAIN_MASK | DRV8704_CTRL_DTIME_MASK) &&
-         writeRegisterVerified(
-             DRV8704_REG_TORQUE,
-             torque.all,
-             DRV8704_TORQUE_MASK) &&
-         writeRegisterVerified(
-             DRV8704_REG_OFF,
-             off.all,
-             DRV8704_OFF_TOFF_MASK | DRV8704_OFF_PWMMODE_MASK) &&
-         writeRegisterVerified(
-             DRV8704_REG_BLANK,
-             blank.all,
-             DRV8704_BLANK_TBLANK_MASK) &&
-         writeRegisterVerified(
-             DRV8704_REG_DECAY,
-             decay.all,
-             DRV8704_DECAY_TDECAY_MASK | DRV8704_DECAY_DECMOD_MASK) &&
-         writeRegisterVerified(
-             DRV8704_REG_DRIVE,
-             drive.all,
-             DRV8704_DRIVE_OCPTH_MASK |
-                 DRV8704_DRIVE_OCPDEG_MASK |
-                 DRV8704_DRIVE_TDRIVEN_MASK |
-                 DRV8704_DRIVE_TDRIVEP_MASK |
-                 DRV8704_DRIVE_IDRIVEN_MASK |
-                 DRV8704_DRIVE_IDRIVEP_MASK);
+  if (!writeRegisterVerified(
+          DRV8704_REG_CTRL,
+          ctrl.all,
+          DRV8704_CTRL_ENBL_MASK | DRV8704_CTRL_ISGAIN_MASK | DRV8704_CTRL_DTIME_MASK)) {
+    LOGE("DRV8704 applyConfig: CTRL register update failed");
+    return false;
+  }
+  if (!writeRegisterVerified(DRV8704_REG_TORQUE, torque.all, DRV8704_TORQUE_MASK)) {
+    LOGE("DRV8704 applyConfig: TORQUE register update failed");
+    return false;
+  }
+  if (!writeRegisterVerified(
+          DRV8704_REG_OFF,
+          off.all,
+          DRV8704_OFF_TOFF_MASK | DRV8704_OFF_PWMMODE_MASK)) {
+    LOGE("DRV8704 applyConfig: OFF register update failed");
+    return false;
+  }
+  if (!writeRegisterVerified(DRV8704_REG_BLANK, blank.all, DRV8704_BLANK_TBLANK_MASK)) {
+    LOGE("DRV8704 applyConfig: BLANK register update failed");
+    return false;
+  }
+  if (!writeRegisterVerified(
+          DRV8704_REG_DECAY,
+          decay.all,
+          DRV8704_DECAY_TDECAY_MASK | DRV8704_DECAY_DECMOD_MASK)) {
+    LOGE("DRV8704 applyConfig: DECAY register update failed");
+    return false;
+  }
+  if (!writeRegisterVerified(
+          DRV8704_REG_DRIVE,
+          drive.all,
+          DRV8704_DRIVE_OCPTH_MASK |
+              DRV8704_DRIVE_OCPDEG_MASK |
+              DRV8704_DRIVE_TDRIVEN_MASK |
+              DRV8704_DRIVE_TDRIVEP_MASK |
+              DRV8704_DRIVE_IDRIVEN_MASK |
+              DRV8704_DRIVE_IDRIVEP_MASK)) {
+    LOGE("DRV8704 applyConfig: DRIVE register update failed");
+    return false;
+  }
+
+  return true;
 }

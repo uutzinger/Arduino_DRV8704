@@ -485,6 +485,14 @@ private:
   bool checkDefaultRegisters(uint8_t& matchCount);
 
   /**
+   * @brief Log one default-register mismatch during startup health checking.
+   * @param address Register address being checked.
+   * @param expected Expected reset/default value.
+   * @param actual Actual value read from the device.
+   */
+  void logDefaultRegisterMismatch(uint8_t address, uint16_t expected, uint16_t actual) const;
+
+  /**
    * @brief Return the numeric V/V gain corresponding to the enum selection.
    * @param gain Sense-gain enum.
    * @return Gain value in volts per volt.

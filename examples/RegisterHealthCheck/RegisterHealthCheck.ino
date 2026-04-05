@@ -1,4 +1,5 @@
 #include <drv8704.h>
+#include <logger.h>
 
 namespace {
 
@@ -30,7 +31,17 @@ void printRegister(Stream& out, const char* label, uint16_t value) {
 
 void setup() {
   Serial.begin(115200);
-  delay(1000);
+  currentLogLevel = LOG_LEVEL_INFO;
+  unsigned long start = millis();
+  while (!Serial && millis() - start < 10000) {
+      delay(10);
+  }  
+
+  // Deselect other SPI devices that may be present on the bus
+  pinMode(6, OUTPUT);
+  digitalWrite(6, HIGH);
+  pinMode(9, OUTPUT);
+  digitalWrite(9, HIGH);
 
   DRV8704& driver = motorDriver();
   if (!driver.begin()) {
@@ -50,6 +61,16 @@ void setup() {
   Serial.print("Fault present: ");
   Serial.println(health.faultPresent ? "yes" : "no");
 
+  if (!driver.clearFaults()) {
+    Serial.println("Clear faults command failed");
+  } else {
+    Serial.println("Clear faults command sent");
+  }
+
+  DRV8704Status status = driver.readStatus();
+  Serial.print("Fault present after clear: ");
+  Serial.println(driver.hasFault() ? "yes" : "no");
+
   printRegister(Serial, "CTRL", driver.readRegister(RegisterAddress::Ctrl));
   printRegister(Serial, "TORQUE", driver.readRegister(RegisterAddress::Torque));
   printRegister(Serial, "OFF", driver.readRegister(RegisterAddress::Off));
@@ -58,7 +79,6 @@ void setup() {
   printRegister(Serial, "DRIVE", driver.readRegister(RegisterAddress::Drive));
   printRegister(Serial, "STATUS", driver.readRegister(RegisterAddress::Status));
 
-  DRV8704Status status = driver.readStatus();
   Serial.print("Overtemperature: ");
   Serial.println(status.overTemperature ? "yes" : "no");
   Serial.print("A overcurrent: ");

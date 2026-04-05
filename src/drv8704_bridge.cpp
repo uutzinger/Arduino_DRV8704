@@ -5,6 +5,7 @@
 
 #include "drv8704.h"
 #include "drv8704_pwm.h"
+#include <logger.h>
 
 namespace {
 
@@ -59,6 +60,7 @@ void DRV8704::setBridgeStaticMode(BridgeId bridge, BridgeMode mode) {
 
 bool DRV8704::setBridgePwm(int8_t in1Pin, int8_t in2Pin, Direction direction, float speedPercent) {
   if (!pwmModeEnabled_ || pwmBackend_ == nullptr || in1Pin < 0 || in2Pin < 0) {
+    LOGE("DRV8704 setBridgePwm: PWM unavailable or bridge pins invalid");
     return false;
   }
 
@@ -85,6 +87,7 @@ bool DRV8704::setBridgePwm(int8_t in1Pin, int8_t in2Pin, Direction direction, fl
 
   const uint32_t maxDuty = (pwmCapability_.dutySteps > 1UL) ? (pwmCapability_.dutySteps - 1UL) : 0UL;
   if (maxDuty == 0UL) {
+    LOGE("DRV8704 setBridgePwm: PWM backend reported zero usable duty range");
     return false;
   }
 
@@ -107,6 +110,7 @@ bool DRV8704::setBridgePwm(int8_t in1Pin, int8_t in2Pin, Direction direction, fl
 
 bool DRV8704::applyBridgeState(BridgeId bridge) {
   if (!initialized_) {
+    LOGE("DRV8704 applyBridgeState: device not initialized");
     return false;
   }
 
@@ -125,6 +129,7 @@ bool DRV8704::applyBridgeState(BridgeId bridge) {
       return true;
     case BridgeRuntimeState::PwmDriveWithCurrentLimit:
       if (!currentLimitEnabled_) {
+        LOGE("DRV8704 applyBridgeState: PWM drive requested without current limit");
         return false;
       }
       if (bridge == BridgeId::A) {
@@ -133,6 +138,7 @@ bool DRV8704::applyBridgeState(BridgeId bridge) {
       return setBridgePwm(pins_.bin1Pin, pins_.bin2Pin, bridgeDirections_[index], bridgeSpeedPercents_[index]);
   }
 
+  LOGE("DRV8704 applyBridgeState: unsupported runtime state");
   return false;
 }
 
@@ -183,6 +189,7 @@ DRV8704BridgeState DRV8704::bridgeState(BridgeId bridge) const {
 
 bool DRV8704::beginPwmMode(const DRV8704PwmConfig& config) {
   if (!initialized_) {
+    LOGE("DRV8704 beginPwmMode: device not initialized");
     return false;
   }
 
@@ -205,17 +212,22 @@ bool DRV8704::beginPwmMode(const DRV8704PwmConfig& config) {
 
   pwmCapability_ = DRV8704PwmCapability();
   if (pwmBackend_ == nullptr) {
+    LOGE("DRV8704 beginPwmMode: no PWM backend available");
     return false;
   }
 
   pwmModeEnabled_ = pwmBackend_->begin(pins_, pwmConfig_, pwmCapability_);
   if (!pwmModeEnabled_) {
     pwmCapability_.backendType = PwmBackendType::Unsupported;
+    LOGE("DRV8704 beginPwmMode: backend initialization failed");
     return false;
   }
 
   if (currentLimitEnabled_ && currentLimitResult_.valid) {
-    return applyCurrentLimitResult(currentLimitResult_, pwmConfig_.frequencyHz);
+    if (!applyCurrentLimitResult(currentLimitResult_, pwmConfig_.frequencyHz)) {
+      LOGE("DRV8704 beginPwmMode: failed to reapply current limit after PWM init");
+      return false;
+    }
   }
 
   return true;
@@ -256,16 +268,22 @@ void DRV8704::endPwmMode() {
 
 bool DRV8704::setPwmFrequency(uint32_t frequencyHz) {
   if (!pwmModeEnabled_ || pwmBackend_ == nullptr) {
+    LOGE("DRV8704 setPwmFrequency: PWM mode not enabled");
     return false;
   }
 
   pwmConfig_.frequencyHz = frequencyHz;
   if (!pwmBackend_->configure(pins_, pwmConfig_, pwmCapability_)) {
+    LOGE("DRV8704 setPwmFrequency: backend rejected requested frequency %lu Hz",
+         static_cast<unsigned long>(frequencyHz));
     return false;
   }
 
   if (currentLimitEnabled_ && currentLimitResult_.valid) {
-    return applyCurrentLimitResult(currentLimitResult_, pwmCapability_.achievedFrequencyHz);
+    if (!applyCurrentLimitResult(currentLimitResult_, pwmCapability_.achievedFrequencyHz)) {
+      LOGE("DRV8704 setPwmFrequency: failed to reapply current limit after PWM reconfiguration");
+      return false;
+    }
   }
 
   return true;
@@ -279,6 +297,7 @@ bool DRV8704::setSpeed(BridgeId bridge, float speedPercent) {
   }
 
   if (!pwmModeEnabled_ || pwmBackend_ == nullptr || !currentLimitEnabled_) {
+    LOGE("DRV8704 setSpeed: PWM with current limit requested before mode/current-limit setup");
     return false;
   }
 

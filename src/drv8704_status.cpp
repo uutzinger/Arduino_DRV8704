@@ -4,6 +4,7 @@
  */
 
 #include "drv8704.h"
+#include <logger.h>
 
 DRV8704Status DRV8704::readStatus() {
   const uint16_t raw = readRegister(DRV8704_REG_STATUS);
@@ -39,10 +40,18 @@ bool DRV8704::hasFault() {
 }
 
 bool DRV8704::clearFaults() {
-  return writeRegister(DRV8704_REG_STATUS, 0x0000U);
+  if (!writeRegister(DRV8704_REG_STATUS, 0x0000U)) {
+    LOGE("DRV8704 clearFaults: failed to clear STATUS register");
+    return false;
+  }
+  return true;
 }
 
 bool DRV8704::clearFault(FaultBit bit) {
   const uint16_t mask = static_cast<uint16_t>(1U << static_cast<uint8_t>(bit)) & DRV8704_STATUS_FAULT_MASK;
-  return updateRegister(DRV8704_REG_STATUS, mask, 0x0000U);
+  if (!updateRegister(DRV8704_REG_STATUS, mask, 0x0000U)) {
+    LOGE("DRV8704 clearFault: failed to clear fault bit %u", static_cast<unsigned>(bit));
+    return false;
+  }
+  return true;
 }

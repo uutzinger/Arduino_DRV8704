@@ -4,6 +4,7 @@
  */
 
 #include "drv8704.h"
+#include <logger.h>
 
 namespace {
 
@@ -56,11 +57,11 @@ DRV8704CurrentPresetConfig DRV8704::presetConfig(CurrentModePreset preset, uint3
 
   switch (preset) {
     case CurrentModePreset::Heater:
-      // Resistive loads usually do not need aggressive current decay.
-      // External PWM frequency has little influence on the best internal decay choice.
+      // Bench testing on a resistive heater pad showed the highest delivered current with
+      // minimum blanking and auto-mixed decay. A longer off-time still worked well.
       config.offTime = 0x40U;
-      config.blankTime = 0x80U;
-      config.decayMode = DecayMode::Slow;
+      config.blankTime = 0x00U;
+      config.decayMode = DecayMode::AutoMixed;
       config.decayTime = 0x10U;
       config.deadTime = DeadTime::Ns410;
       break;
@@ -110,6 +111,7 @@ bool DRV8704::setShuntResistance(float ohms) {
 
 bool DRV8704::setShuntResistance(BridgeId bridge, float ohms) {
   if (!(ohms > kDrv8704MinimumShuntOhms)) {
+    LOGE("DRV8704 setShuntResistance: invalid shunt value %.9f ohms", ohms);
     return false;
   }
 
@@ -130,11 +132,15 @@ bool DRV8704::setCurrentModePreset(CurrentModePreset preset) {
       !setBlankTime(currentPresetConfig_.blankTime) ||
       !setDecayMode(currentPresetConfig_.decayMode) ||
       !setDecayTime(currentPresetConfig_.decayTime)) {
+    LOGE("DRV8704 setCurrentModePreset: failed to apply preset timing registers");
     return false;
   }
 
   if (currentLimitEnabled_ && currentLimitResult_.valid) {
-    return applyCurrentLimitResult(currentLimitResult_, pwmModeEnabled_ ? pwmConfig_.frequencyHz : 0UL);
+    if (!applyCurrentLimitResult(currentLimitResult_, pwmModeEnabled_ ? pwmConfig_.frequencyHz : 0UL)) {
+      LOGE("DRV8704 setCurrentModePreset: failed to reapply current limit after preset change");
+      return false;
+    }
   }
   return true;
 }
@@ -165,6 +171,9 @@ bool DRV8704::deriveCurrentLimit(float amps, DRV8704CurrentLimitResult& result) 
   result.pwmFrequencyHz = pwmModeEnabled_ ? pwmConfig_.frequencyHz : 0UL;
 
   if (!(amps > 0.0f) || !(result.referenceShuntOhms > kDrv8704MinimumShuntOhms)) {
+    LOGE("DRV8704 deriveCurrentLimit: invalid request (amps=%.6f, reference shunt=%.9f)",
+         amps,
+         result.referenceShuntOhms);
     return false;
   }
 
@@ -210,6 +219,7 @@ bool DRV8704::deriveCurrentLimit(float amps, DRV8704CurrentLimitResult& result) 
     }
   }
 
+  LOGE("DRV8704 deriveCurrentLimit: requested current %.6f A exceeds achievable range", amps);
   return false;
 }
 
@@ -223,6 +233,7 @@ bool DRV8704::applyCurrentLimitResult(const DRV8704CurrentLimitResult& result, u
       !setSenseGain(result.selectedGain) ||
       !setTorque(result.torqueDac) ||
       !enableBridgeDriver(true)) {
+    LOGE("DRV8704 applyCurrentLimitResult: failed to program current-limit registers");
     return false;
   }
 
@@ -236,11 +247,13 @@ bool DRV8704::applyCurrentLimitResult(const DRV8704CurrentLimitResult& result, u
 
 bool DRV8704::setCurrentLimit(float amps) {
   if (!initialized_) {
+    LOGE("DRV8704 setCurrentLimit: device not initialized");
     return false;
   }
 
   DRV8704CurrentLimitResult result;
   if (!deriveCurrentLimit(amps, result)) {
+    LOGE("DRV8704 setCurrentLimit: could not derive current-limit settings for %.6f A", amps);
     return false;
   }
 
@@ -250,6 +263,7 @@ bool DRV8704::setCurrentLimit(float amps) {
 bool DRV8704::setCurrent(BridgeId bridge, float amps) {
   const uint8_t index = bridgeIndex(bridge);
   if (!setCurrentLimit(amps)) {
+    LOGE("DRV8704 setCurrent: failed to arm current limit for %.6f A", amps);
     return false;
   }
 
@@ -257,12 +271,17 @@ bool DRV8704::setCurrent(BridgeId bridge, float amps) {
   bridgeStates_[index].direction = bridgeDirections_[index];
   bridgeStates_[index].speedPercent = 100.0f;
   bridgeSpeedPercents_[index] = 100.0f;
-  return applyBridgeState(bridge);
+  if (!applyBridgeState(bridge)) {
+    LOGE("DRV8704 setCurrent: failed to apply bridge state");
+    return false;
+  }
+  return true;
 }
 
 bool DRV8704::disableCurrentLimit() {
   if (initialized_) {
     if (!setSenseGain(SenseGain::Gain5VperV) || !setTorque(static_cast<uint8_t>(kDrv8704TorqueMax))) {
+      LOGE("DRV8704 disableCurrentLimit: failed to restore permissive current-limit settings");
       return false;
     }
   }

@@ -120,11 +120,13 @@ These states override active current-drive or PWM-drive behavior on that bridge 
 
 Use current drive when you want the DRV8704 internal current chopper to regulate a bridge in the currently selected direction.
 
+Current drive is intended for inductive loads. Do not present it as a primary control method for resistive heaters.
+
 Primary API:
 
 - `setShuntResistance(float ohms)` depends on your hardware design
 - `setShuntResistance(BridgeId bridge, float ohms)`
-- `setCurrentModePreset(CurrentModePreset preset)` default settings for heater, tec or motors
+- `setCurrentModePreset(CurrentModePreset preset)` timing baseline for heater, TEC, or motor loads
 - `setCurrentLimit(float amps)`
 - `setCurrent(BridgeId bridge, float amps)`
 - `disableCurrentLimit()`
@@ -145,9 +147,17 @@ ICHOP = 2.75 * TORQUE / (256 * ISGAIN * RISENSE)
 
 The implementation chooses the highest usable gain first because that gives the finest current resolution for a given shunt.
 
+Important limitation:
+
+- the DRV8704 shunt path is used for internal current chopping and comparator behavior
+- the chip does not provide direct current telemetry over SPI
+- `currentLimitResult()` reports the programmed current-trip settings, not measured load current
+- on mostly resistive heaters, bench results may not track requested current linearly even after timing optimization
+- for heaters, use PWM mode for control and treat current limit as protection
+
 ### PWM With Current Limit
 
-Use PWM mode when you want open-loop duty control while keeping the DRV8704 current limit active during PWM on-time.
+Use PWM mode when you want open-loop duty control while keeping the DRV8704 current limit active during PWM on-time. This is the recommended control path for resistive heaters.
 
 Primary API:
 
@@ -166,26 +176,35 @@ Behavior:
 
 High-level PWM control is intentionally framed as PWM with current limit. If you want effectively unbounded drive, deliberately program a very high current limit instead of using a separate unsafe mode.
 
+Default library PWM settings now start from:
+
+- `5 kHz`
+- `10-bit` preferred resolution
+
+The interactive examples follow that model by default:
+
+- `pwm ...` commands apply PWM with the stored current limit active
+- `full ...` is the explicit no-current-limit comparison mode
+- `DRV8704_Test` is the main engineering console for bring-up and bench tuning
+
 ## Presets
 
-The current-limit presets are practical starting points:
+The presets are starting points for current-limit timing, not guaranteed final answers.
 
 - `Heater`
-  - resistive load
-  - slower, quieter decay behavior
+  - resistive heater-oriented timing baseline
+  - bench-tuned default uses `TOFF=0x40`, `TBLANK=0x00`, `AutoMixed` decay on the reference heater-pad setup
+  - use this preset with PWM mode for heater control
 - `ThermoelectricCooler`
-  - weakly inductive bipolar load
-  - mixed-decay middle ground
+  - mixed-decay starting point for weakly inductive bipolar loads
 - `MotorSmallInductance`
-  - more aggressive correction
-  - shorter timing, faster decay
+  - shorter timing, more aggressive correction
 - `MotorMediumInductance`
-  - default motor preset
+  - general motor default
 - `MotorLargeInductance`
-  - slower current change
-  - longer timing, auto mixed decay
+  - longer timing for slower current change
 
-The implementation also adjusts preset timing when PWM mode is active at higher frequency. That is only a starting heuristic, not a substitute for bench tuning.
+The implementation also adjusts preset timing when PWM mode is active at higher frequency. Validate the preset on real hardware and retune as needed.
 
 ## Mode Transitions
 
@@ -214,10 +233,13 @@ The example set is organized by workflow:
 
 - `BasicBringup`
 - `RegisterHealthCheck`
+- `DRV8704_Test`
 - `BridgeControlDemo`
 - `CurrentModeDemo`
 - `CurrentPresetDemo`
+- `Current_Test`
 - `PwmModeDemo`
+- `PWM_Test`
 
 ## Example Snippets
 
@@ -230,11 +252,20 @@ driver.setDirection(BridgeId::A, Direction::Forward);
 driver.setCurrent(BridgeId::A, 4.0f);
 ```
 
+### Interactive Engineering Test
+
+Use `examples/DRV8704_Test` when you need one serial console for:
+
+- bring-up checks after `BasicBringup` and `RegisterHealthCheck`
+- current-mode testing and timing sweeps
+- PWM duty, frequency, and resolution testing
+- comparing current-limited drive, PWM drive, and `full` drive on hardware
+
 ### PWM With Current Limit
 
 ```cpp
 DRV8704PwmConfig pwm;
-pwm.frequencyHz = 20000;
+pwm.frequencyHz = 5000;
 pwm.preferredResolutionBits = 10;
 
 driver.setCurrentLimit(4.0f);

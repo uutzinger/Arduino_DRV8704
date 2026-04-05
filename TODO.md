@@ -266,6 +266,7 @@ This file converts `DRV8704_DRIVER_REQUIREMENTS.md` into an implementation check
 - [x] Set Arduino category
 - [x] Set public include header
 - [x] Declare dependencies if needed
+- [x] Declare `UUtzinger_logger` dependency
 - [x] Populate `keywords.txt`
 - [x] Add license file if missing
 
@@ -277,6 +278,7 @@ This file converts `DRV8704_DRIVER_REQUIREMENTS.md` into an implementation check
 - [x] Create a current-mode example using shunt resistance and amps
 - [x] Create a preset-based example for heater or thermoelectric load
 - [x] Create a PWM-mode example
+- [x] Add `Current_Test` interactive bench example for serial control and timing sweeps
 - [x] Refactor current-drive example to use:
   - `setDirection(...)`
   - chip-global current limit
@@ -295,7 +297,7 @@ This file converts `DRV8704_DRIVER_REQUIREMENTS.md` into an implementation check
 
 - [x] Verify the library compiles as an Arduino library
 - [x] Verify all documented registers are represented
-- [ ] Verify typed APIs replace string-based APIs
+- [x] Verify typed APIs replace string-based APIs
 - [ ] Verify status and fault handling behavior
 - [ ] Verify current-mode gain selection and torque derivation
 - [ ] Verify preset selection produces sensible register settings
@@ -310,8 +312,66 @@ This file converts `DRV8704_DRIVER_REQUIREMENTS.md` into an implementation check
 - [ ] Verify current-limit settings remain active during PWM drive
 - [ ] Verify `disableCurrentLimit()` behavior
 - [ ] Verify preset adjustments remain sensible across PWM frequencies
-- [ ] Generate docs with the adapted Doxygen workflow
-- [ ] Validate behavior on hardware
+- [x] Generate docs with the adapted Doxygen workflow
+- [x] Validate behavior on hardware
+- [x] Re-validate the updated heater preset on hardware after the bench-tuned `AutoMixed` / `TBLANK=0x00` change
+- [x] Determine whether current mode on resistive heaters is only a coarse limiter or can be made meaningfully setpoint-accurate
+
+### 17.1 Manual Bench Test Scenarios
+
+- [x] Shared-SPI bring-up:
+  - Confirm other SPI devices are explicitly deselected before `driver.begin()`
+  - Confirm DRV8704 active-high `SCS` does not interfere with other active-low devices
+- [x] Cold-start health-check on hardware:
+  - Power-cycle `VM/VBUS`
+  - Run `RegisterHealthCheck`
+  - Confirm `TORQUE`, `OFF`, `BLANK`, `DECAY`, and `DRIVE` reset defaults match
+  - Confirm `CTRL` reset default matches `0x0301`
+- [x] SPI communication plausibility:
+  - Confirm write/readback probe passes
+  - Confirm raw register reads are not stuck at `0x0000` or `0x0FFF`
+- [x] Supply and UVLO behavior:
+  - Reproduce UVLO with overly aggressive bench current limit
+  - Confirm UVLO clears when supply current limit is increased
+  - Confirm `clearFaults()` does not report persistent UVLO once supply is healthy
+- [ ] Current-limit derivation:
+  - With known shunt value, request at least three currents in-range
+  - Record selected gain, torque DAC, and reported current resolution
+  - Verify requests above achievable range are rejected cleanly
+- [ ] Preset sanity check:
+  - Print preset-derived `TOFF`, `TBLANK`, `DECMOD`, `TDECAY`, and dead time
+  - Compare heater / TEC / motor presets for expected relative aggressiveness
+  - Repeat at low PWM frequency and high PWM frequency to confirm preset adjustment
+  - Repeat heater-pad bench tuning after any future preset changes
+- [ ] Current-drive functional test:
+  - Set direction explicitly
+  - Enter current-drive with a conservative current limit
+  - Verify `coast()` and `brake()` immediately override drive
+  - Verify changing direction requires `setDirection(...)`
+- [ ] PWM-with-current-limit functional test:
+  - Set current limit first
+  - Start PWM mode and confirm achieved frequency / duty resolution report
+  - Verify `setSpeed(..., 0)` coasts
+  - Verify `setSpeed(..., 100)` drives constant-on without PWM toggling
+  - Verify current limit remains active during PWM drive
+- [ ] Direction and mode-transition test:
+  - Confirm `setCurrent(...)` does not change direction
+  - Confirm `setSpeed(...)` does not change direction
+  - Confirm last command wins per bridge
+  - Confirm transitions between `Coast`, `Brake`, `CurrentDrive`, and `PwmDriveWithCurrentLimit`
+- [ ] Fault handling test:
+  - Confirm `readStatus()` matches `FAULTn`
+  - Confirm `clearFaults()` and `clearFault(...)` behave sensibly
+  - If safe, induce one known fault and confirm it is reported and clears correctly
+- [ ] Platform compile matrix:
+  - Compile `RegisterHealthCheck` on ESP32
+  - Compile `CurrentModeDemo` on ESP32
+  - Compile `PwmModeDemo` on ESP32
+  - Compile PWM example on Teensy
+  - Compile PWM example on STM
+- [ ] Logger behavior:
+  - Confirm `LOG_LEVEL_INFO` shows pass/fail bring-up steps
+  - Confirm failures produce `LOGE(...)` messages with enough diagnostic detail
 
 ## 18. Implementation Order
 
@@ -333,3 +393,8 @@ This file converts `DRV8704_DRIVER_REQUIREMENTS.md` into an implementation check
 16. Rework examples around the new control model. `[done]`
 17. Re-read and clean up the README after implementation stabilizes. `[done]`
 18. Run compile and hardware validation on supported targets.
+
+## 19. Follow-On Example Work
+
+- [x] Create a consolidated example program that exercises all major DRV8704 modes from one serial console
+- [x] Add `PWM_Test.ino` with a command style parallel to `Current_Test.ino`

@@ -4,6 +4,7 @@
  */
 
 #include "drv8704.h"
+#include <logger.h>
 
 DRV8704::DRV8704(const DRV8704Pins& pins, SPIClass& spi)
     : pins_(pins),
@@ -36,21 +37,33 @@ bool DRV8704::begin() {
   initialized_ = false;
   seedDefaultRegisterCache();
 
+  LOGI("DRV8704 begin: starting initialization");
+
   pinMode(pins_.csPin, OUTPUT);
   digitalWrite(pins_.csPin, LOW);
+  LOGI("DRV8704 begin: configured SCS pin %d", pins_.csPin);
 
   if (pins_.sleepPin >= 0) {
     pinMode(static_cast<uint8_t>(pins_.sleepPin), OUTPUT);
     digitalWrite(static_cast<uint8_t>(pins_.sleepPin), LOW);
+    LOGI("DRV8704 begin: configured SLEEPn pin %d", pins_.sleepPin);
+  } else {
+    LOGI("DRV8704 begin: no SLEEPn pin configured");
   }
 
   if (pins_.resetPin >= 0) {
     pinMode(static_cast<uint8_t>(pins_.resetPin), OUTPUT);
     digitalWrite(static_cast<uint8_t>(pins_.resetPin), LOW);
+    LOGI("DRV8704 begin: configured RESET pin %d", pins_.resetPin);
+  } else {
+    LOGI("DRV8704 begin: no RESET pin configured");
   }
 
   if (pins_.faultPin >= 0) {
     pinMode(static_cast<uint8_t>(pins_.faultPin), INPUT_PULLUP);
+    LOGI("DRV8704 begin: configured FAULTn pin %d", pins_.faultPin);
+  } else {
+    LOGI("DRV8704 begin: no FAULTn pin configured");
   }
 
   if (pins_.ain1Pin >= 0) {
@@ -69,28 +82,53 @@ bool DRV8704::begin() {
     pinMode(static_cast<uint8_t>(pins_.bin2Pin), OUTPUT);
     digitalWrite(static_cast<uint8_t>(pins_.bin2Pin), LOW);
   }
+  LOGI("DRV8704 begin: bridge control pins initialized low");
 
   spi_->begin();
+  LOGI("DRV8704 begin: SPI bus started");
 
   wake();
+  LOGI("DRV8704 begin: wake sequence complete");
 
   if (pins_.resetPin >= 0) {
     reset();
+    LOGI("DRV8704 begin: reset pulse complete");
   } else {
     delayMicroseconds(DRV8704_RESET_RECOVERY_US);
+    LOGI("DRV8704 begin: reset pin unavailable, applied recovery delay only");
   }
 
   initialized_ = true;
   if (!syncRegisterCache()) {
+    LOGE("DRV8704 begin: register cache synchronization failed");
+    initialized_ = false;
+    return false;
+  }
+  LOGI("DRV8704 begin: register cache synchronization passed");
+
+  const DRV8704HealthCheck health = healthCheck();
+  if (!health.defaultsMatch) {
+    LOGE("DRV8704 begin: default register check failed (%u/6 matched)",
+         static_cast<unsigned>(health.defaultMatches));
+  } else {
+    LOGI("DRV8704 begin: default register check passed (%u/6 matched)",
+         static_cast<unsigned>(health.defaultMatches));
+  }
+
+  if (!health.writeReadbackOk) {
+    LOGE("DRV8704 begin: write/readback probe failed");
+    LOGE("DRV8704 begin: initialization failed");
     initialized_ = false;
     return false;
   }
 
-  const DRV8704HealthCheck health = healthCheck();
-  if (!health.spiOk) {
-    initialized_ = false;
-    return false;
+  LOGI("DRV8704 begin: write/readback probe passed");
+  if (health.faultPresent) {
+    LOGE("DRV8704 begin: fault present, STATUS=0x%04X", health.statusRegister);
+  } else {
+    LOGI("DRV8704 begin: no fault present, STATUS=0x%04X", health.statusRegister);
   }
+  LOGI("DRV8704 begin: initialization passed");
 
   return true;
 }
@@ -202,10 +240,19 @@ bool DRV8704::checkDefaultRegisters(uint8_t& matchCount) {
     const uint16_t value = readRegister(expectedRegisters[i].address);
     if (value == expectedRegisters[i].expected) {
       ++matchCount;
+    } else {
+      logDefaultRegisterMismatch(expectedRegisters[i].address, expectedRegisters[i].expected, value);
     }
   }
 
   return matchCount == registerCount;
+}
+
+void DRV8704::logDefaultRegisterMismatch(uint8_t address, uint16_t expected, uint16_t actual) const {
+  LOGE("DRV8704 healthCheck: register 0x%02X mismatch (expected=0x%04X, actual=0x%04X)",
+       address,
+       expected,
+       actual);
 }
 
 bool DRV8704::performWriteReadbackProbe() {

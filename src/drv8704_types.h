@@ -8,6 +8,8 @@
 
 #include <stdint.h>
 
+#include "drv8704_defs.h"
+
 /**
  * @brief Supported sense amplifier gain settings.
  */
@@ -322,8 +324,8 @@ struct DRV8704PwmConfig {
   uint8_t preferredResolutionBits;
 
   DRV8704PwmConfig()
-      : frequencyHz(20000UL),
-        preferredResolutionBits(8U) {}
+      : frequencyHz(DRV8704_DEFAULT_INPUT_PWM_HZ),
+        preferredResolutionBits(DRV8704_DEFAULT_PWM_RES_BITS) {}
 };
 
 /**

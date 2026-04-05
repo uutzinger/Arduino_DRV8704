@@ -1,4 +1,5 @@
 #include <drv8704.h>
+#include <logger.h>
 
 namespace {
 
@@ -39,6 +40,7 @@ void printPwmCapability(Stream& out, const DRV8704PwmCapability& capability) {
 void setup() {
   Serial.begin(115200);
   delay(1000);
+  currentLogLevel = LOG_LEVEL_INFO;
 
   DRV8704& driver = motorDriver();
   if (!driver.begin()) {

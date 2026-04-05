@@ -53,6 +53,7 @@ The new driver should:
 - Support both configuration-time use and runtime motor control support.
 - Provide a high-level current-control mode where the user commands direction and current in amperes.
 - Provide a hardware PWM mode for supported MCU families where the user commands direction and speed in percent.
+- Integrate with `UUtzinger_logger` so bring-up and failure modes can be diagnosed over serial logging.
 - Keep hardware-specific logic contained and easy to test.
 - Avoid hidden global state.
 
@@ -86,6 +87,7 @@ The driver shall:
 - Support bringing the device out of sleep
 - Support hardware reset if a reset pin is provided
 - Read and cache initial register contents after startup
+- Log key bring-up steps and failures during `begin()` using `UUtzinger_logger`
 - Provide `end()` or equivalent shutdown support if desired
 
 ## 5.2 SPI Communication
@@ -101,7 +103,9 @@ The driver shall:
   - `writeRegister()`
   - `updateRegister()`
 - Provide optional readback verification after writes
-- Provide SPI health check to verify that device is attached by reading registers and write/readback in the driver begin function.
+- Provide SPI health check to verify that device is attached by reading registers and performing a safe write/readback probe during `begin()`
+- Report mismatched default-register reads in hexadecimal during health-check failure logging
+- Support use on a shared SPI bus where the DRV8704 driver manages only its own active-high `SCS` line and other devices must be deselected by the application or their respective drivers
 
 ## 5.3 Register Model
 
@@ -239,6 +243,8 @@ The preset system should allow:
 
 The preset families listed above are sufficient for the first release. The implementation should prefer a small number of defensible preset families over a larger set of weakly justified variants.
 
+Preset guidance must be documented as hardware-facing starting values, not guaranteed optimal settings. Bench tuning on the real load may require revising one or more shipped presets, especially for weakly inductive or mostly resistive loads such as heaters and TEC assemblies.
+
 ## 5.7 PWM Input Mode and Platform PWM Generation
 
 The driver shall provide a PWM-input operating mode for supported MCU platforms, but the high-level PWM mode shall always be framed as PWM with current limit rather than PWM without current limit.
@@ -254,6 +260,11 @@ Requirements:
 - on Teensy and STM, the implementation should use hardware PWM facilities provided by the platform core
 - the user shall be able to set PWM frequency in hertz
 - the driver shall enforce an upper limit based on DRV8704 input capability and timer backend capability
+
+Example coverage should include:
+
+- a current-mode interactive bench test example for serial current / direction changes and preset timing sweeps
+- a separate PWM-focused interactive bench test example with a command style similar to the current-mode test program
 - the user shall be able to command speed from `0` to `100`
 - the driver shall report the smallest achievable duty increment for the chosen PWM frequency and platform
 - at speed `0`, the PWM input shall be off and the resulting bridge behavior shall match `coast`
@@ -318,6 +329,7 @@ The driver shall:
 - Support clearing clearable latched faults by writing zero to relevant bits
 - Respect datasheet behavior for auto-clearing conditions such as thermal shutdown and UVLO recovery
 - Optionally monitor the `FAULTn` pin when provided
+- Allow `begin()` to succeed when SPI communication is healthy even if a fault bit such as `UVLO` is active, while still logging the fault condition
 
 The driver should provide helpers such as:
 
@@ -362,6 +374,7 @@ The driver should provide:
 - readback checking of configuration writes
 - sanity checking on reserved bits
 - simple health report structure
+- serial logging of pass/fail bring-up steps at info/error level
 
 For current mode and PWM mode diagnostics, the driver should also report:
 
@@ -380,6 +393,7 @@ The README shall explain:
 - the purpose of the main driver functions
 - the difference between SPI configuration functions and GPIO bridge-control functions
 - required hardware connections
+- shared-SPI considerations, including the DRV8704 active-high chip-select convention
 - expected startup and usage flow
 - example usage for initialization, configuration, and bridge control
 - fault and status handling concepts
@@ -452,6 +466,10 @@ The `library.properties` file shall:
 - use an Arduino category appropriate for a motor-driver library
 - list any required dependencies explicitly
 
+Current dependency requirement:
+
+- `UUtzinger_logger`
+
 ## 6. API Requirements
 
 The public API should be Arduino-friendly and stable.
@@ -472,6 +490,7 @@ Minimum expected public surface:
 - bridge direction helper
 - PWM-with-current-limit helpers that accept frequency and speed in percent on supported platforms
 - explicit `coast` and `brake` helpers or equivalent bridge-state commands
+- serial logging during initialization and failure handling using `UUtzinger_logger`
 
 Minimum expected high-level public capabilities:
 
@@ -577,6 +596,7 @@ examples/
 - `wake()`
 - `reset()`
 - top-level orchestration
+- bring-up logging and health-check logging
 
 `drv8704_config.cpp`
 
@@ -678,6 +698,8 @@ The implementation shall:
 - make explicit how the user transitions between `Coast`, `Brake`, `CurrentDrive`, and `PwmDriveWithCurrentLimit`
 - avoid encouraging PWM-without-current-limit in the high-level API
 - document that DRV8704 current-limit settings remain active when PWM drive is used unless explicitly changed
+- manage only the DRV8704 chip-select line on a shared SPI bus
+- report SPI bring-up success separately from fault presence during initialization
 
 ## 10. Known Issues in Existing Attempt
 
