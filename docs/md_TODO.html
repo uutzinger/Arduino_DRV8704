@@ -26,7 +26,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">UUtzinger_DRV8704
-   &#160;<span id="projectnumber">0.1.0</span>
+   &#160;<span id="projectnumber">0.1.1</span>
    </div>
    <div id="projectbrief">Arduino library for the DRV8704 dual H-bridge gate driver</div>
   </td>
@@ -88,7 +88,7 @@ $(document).ready(function(){initNavTree('md_TODO.html',''); initResizable(); })
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p>This file converts <code><a class="el" href="DRV8704__DRIVER__REQUIREMENTS_8md.html">DRV8704_DRIVER_REQUIREMENTS.md</a></code> into an implementation checklist.</p>
-<h1><a class="anchor" id="autotoc_md24"></a>
+<h1><a class="anchor" id="autotoc_md25"></a>
 1. Project Skeleton</h1>
 <ul>
 <li>[x] Create <code><a class="el" href="README_8md.html">README.md</a></code></li>
@@ -100,7 +100,7 @@ $(document).ready(function(){initNavTree('md_TODO.html',''); initResizable(); })
 <li>[x] Create <code>examples/</code></li>
 <li>[x] Replace the legacy <code>src/drv.h</code> and <code>src/drv.cpp</code> layout with the new <code>src/</code> structure</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md25"></a>
+<h1><a class="anchor" id="autotoc_md26"></a>
 2. Core Source Layout</h1>
 <ul>
 <li>[x] Create <code><a class="el" href="drv8704_8h.html" title="Public Arduino API for the DRV8704 dual H-bridge gate driver.">src/drv8704.h</a></code></li>
@@ -119,7 +119,7 @@ $(document).ready(function(){initNavTree('md_TODO.html',''); initResizable(); })
 <li>[x] Create <code><a class="el" href="drv8704__pwm__teensy_8cpp.html" title="Teensy hardware-PWM backend for DRV8704 PWM input generation.">src/drv8704_pwm_teensy.cpp</a></code></li>
 <li>[x] Create <code><a class="el" href="drv8704__pwm__stm_8cpp.html" title="STM hardware-PWM backend for DRV8704 PWM input generation.">src/drv8704_pwm_stm.cpp</a></code></li>
 </ul>
-<h1><a class="anchor" id="autotoc_md26"></a>
+<h1><a class="anchor" id="autotoc_md27"></a>
 3. Register Definitions</h1>
 <ul>
 <li>[x] Define register addresses</li>
@@ -128,7 +128,7 @@ $(document).ready(function(){initNavTree('md_TODO.html',''); initResizable(); })
 <li>[x] Define SPI constants and settings</li>
 <li>[x] Define enums for discrete register field values</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md27"></a>
+<h1><a class="anchor" id="autotoc_md28"></a>
 4. Types and Register Views</h1>
 <ul>
 <li>[x] Define configuration structs</li>
@@ -151,7 +151,7 @@ $(document).ready(function(){initNavTree('md_TODO.html',''); initResizable(); })
 <li>[x] Define chip-global current-limit config/result structs</li>
 <li>[x] Define per-bridge direction and mode-state reporting structs</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md28"></a>
+<h1><a class="anchor" id="autotoc_md29"></a>
 5. Public API</h1>
 <ul>
 <li>[x] Define the <code><a class="el" href="classDRV8704.html" title="Arduino-facing DRV8704 device driver class.">DRV8704</a></code> class in <code><a class="el" href="drv8704_8h.html" title="Public Arduino API for the DRV8704 dual H-bridge gate driver.">src/drv8704.h</a></code></li>
@@ -197,7 +197,7 @@ $(document).ready(function(){initNavTree('md_TODO.html',''); initResizable(); })
 <li>[x] Expose explicit <code>coast(BridgeId bridge)</code> and <code>brake(BridgeId bridge)</code> helpers or equivalent bridge-state commands</li>
 <li>[x] Document and enforce last-command-wins semantics per bridge</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md29"></a>
+<h1><a class="anchor" id="autotoc_md30"></a>
 6. SPI Transport</h1>
 <ul>
 <li>[x] Implement raw 16-bit <a class="el" href="classDRV8704.html" title="Arduino-facing DRV8704 device driver class.">DRV8704</a> SPI frame transfer</li>
@@ -207,7 +207,7 @@ $(document).ready(function(){initNavTree('md_TODO.html',''); initResizable(); })
 <li>[x] Implement masked register update support</li>
 <li>[x] Implement SPI health check</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md30"></a>
+<h1><a class="anchor" id="autotoc_md31"></a>
 7. Lifecycle and Startup</h1>
 <ul>
 <li>[x] Implement constructor</li>
@@ -218,7 +218,7 @@ $(document).ready(function(){initNavTree('md_TODO.html',''); initResizable(); })
 <li>[x] Reset device if <code>RESET</code> is available</li>
 <li>[x] Read and cache startup registers</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md31"></a>
+<h1><a class="anchor" id="autotoc_md32"></a>
 8. Core Register Configuration Layer</h1>
 <ul>
 <li>[x] Implement H-bridge enable control through <code>CTRL.ENBL</code></li>
@@ -236,7 +236,7 @@ $(document).ready(function(){initNavTree('md_TODO.html',''); initResizable(); })
 <li>[x] Implement <code>applyConfig()</code></li>
 <li>[x] Implement readback validation where appropriate</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md32"></a>
+<h1><a class="anchor" id="autotoc_md33"></a>
 9. Status and Fault Layer</h1>
 <ul>
 <li>[x] Implement <code>STATUS</code> register decode</li>
@@ -247,7 +247,7 @@ $(document).ready(function(){initNavTree('md_TODO.html',''); initResizable(); })
 <li>[x] Implement <code>clearFaults()</code></li>
 <li>[x] Handle optional <code>FAULTn</code> monitoring</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md33"></a>
+<h1><a class="anchor" id="autotoc_md34"></a>
 10. Runtime Bridge Control Layer</h1>
 <ul>
 <li>[x] Implement bridge A control helpers</li>
@@ -268,7 +268,7 @@ $(document).ready(function(){initNavTree('md_TODO.html',''); initResizable(); })
 <li>[x] Ensure <code>setSpeed(..., 0)</code> behaves exactly like <code>coast(...)</code></li>
 <li>[x] Ensure direction is not changed by <code>setCurrent(...)</code> or <code>setSpeed(...)</code></li>
 </ul>
-<h1><a class="anchor" id="autotoc_md34"></a>
+<h1><a class="anchor" id="autotoc_md35"></a>
 11. Current Limit and Current Drive</h1>
 <ul>
 <li>[x] Implement shunt-aware current mode in <code><a class="el" href="drv8704__current_8cpp.html" title="Current-limit and current-drive helpers for the DRV8704 driver.">src/drv8704_current.cpp</a></code></li>
@@ -297,7 +297,7 @@ $(document).ready(function(){initNavTree('md_TODO.html',''); initResizable(); })
 <li>[x] Implement <code>disableCurrentLimit()</code> semantics without forcing a bridge-state change</li>
 <li>[x] Document that current-limit settings remain active during PWM drive unless explicitly changed</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md35"></a>
+<h1><a class="anchor" id="autotoc_md36"></a>
 12. Predefined Load Presets</h1>
 <ul>
 <li>[x] Define preset family for heater</li>
@@ -318,7 +318,7 @@ $(document).ready(function(){initNavTree('md_TODO.html',''); initResizable(); })
 <li>[x] Adjust preset behavior for PWM-assisted operation based on requested PWM frequency</li>
 <li>[x] Document why preset timing changes between current-drive and PWM-with-current-limit operation</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md36"></a>
+<h1><a class="anchor" id="autotoc_md37"></a>
 13. PWM With Current Limit and Platform Backends</h1>
 <ul>
 <li>[x] Create shared PWM backend abstraction in <code><a class="el" href="drv8704__pwm_8h.html" title="Shared abstraction for platform PWM generation backends.">src/drv8704_pwm.h</a></code></li>
@@ -344,7 +344,7 @@ $(document).ready(function(){initNavTree('md_TODO.html',''); initResizable(); })
 <li>[x] Ensure PWM examples and docs describe current-limited PWM as the primary use pattern</li>
 <li>[x] Update speed-0 semantics from “fully off input state” to explicit <code>coast</code></li>
 </ul>
-<h1><a class="anchor" id="autotoc_md37"></a>
+<h1><a class="anchor" id="autotoc_md38"></a>
 14. Documentation</h1>
 <ul>
 <li>[x] Write <code><a class="el" href="README_8md.html">README.md</a></code> with library purpose and function overview</li>
@@ -389,7 +389,7 @@ $(document).ready(function(){initNavTree('md_TODO.html',''); initResizable(); })
 <li>[x] Document chip-global current-limit behavior clearly</li>
 <li>[x] Re-read and clean up the README after the refactor is complete</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md38"></a>
+<h1><a class="anchor" id="autotoc_md39"></a>
 15. Arduino Packaging</h1>
 <ul>
 <li>[x] Set <code>library.properties</code> name to <code>UUtzinger_DRV8704</code></li>
@@ -397,10 +397,11 @@ $(document).ready(function(){initNavTree('md_TODO.html',''); initResizable(); })
 <li>[x] Set Arduino category</li>
 <li>[x] Set public include header</li>
 <li>[x] Declare dependencies if needed</li>
+<li>[x] Declare <code>UUtzinger_logger</code> dependency</li>
 <li>[x] Populate <code>keywords.txt</code></li>
 <li>[x] Add license file if missing</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md39"></a>
+<h1><a class="anchor" id="autotoc_md40"></a>
 16. Examples</h1>
 <ul>
 <li>[x] Create a minimal initialization example</li>
@@ -409,6 +410,7 @@ $(document).ready(function(){initNavTree('md_TODO.html',''); initResizable(); })
 <li>[x] Create a current-mode example using shunt resistance and amps</li>
 <li>[x] Create a preset-based example for heater or thermoelectric load</li>
 <li>[x] Create a PWM-mode example</li>
+<li>[x] Add <code>Current_Test</code> interactive bench example for serial control and timing sweeps</li>
 <li>[x] Refactor current-drive example to use:<ul>
 <li><code>setDirection(...)</code></li>
 <li>chip-global current limit</li>
@@ -429,12 +431,12 @@ $(document).ready(function(){initNavTree('md_TODO.html',''); initResizable(); })
 </ul>
 </li>
 </ul>
-<h1><a class="anchor" id="autotoc_md40"></a>
+<h1><a class="anchor" id="autotoc_md41"></a>
 17. Validation</h1>
 <ul>
 <li>[x] Verify the library compiles as an Arduino library</li>
 <li>[x] Verify all documented registers are represented</li>
-<li>[ ] Verify typed APIs replace string-based APIs</li>
+<li>[x] Verify typed APIs replace string-based APIs</li>
 <li>[ ] Verify status and fault handling behavior</li>
 <li>[ ] Verify current-mode gain selection and torque derivation</li>
 <li>[ ] Verify preset selection produces sensible register settings</li>
@@ -451,10 +453,93 @@ $(document).ready(function(){initNavTree('md_TODO.html',''); initResizable(); })
 <li>[ ] Verify current-limit settings remain active during PWM drive</li>
 <li>[ ] Verify <code>disableCurrentLimit()</code> behavior</li>
 <li>[ ] Verify preset adjustments remain sensible across PWM frequencies</li>
-<li>[ ] Generate docs with the adapted Doxygen workflow</li>
-<li>[ ] Validate behavior on hardware</li>
+<li>[x] Generate docs with the adapted Doxygen workflow</li>
+<li>[x] Validate behavior on hardware</li>
+<li>[x] Re-validate the updated heater preset on hardware after the bench-tuned <code>AutoMixed</code> / <code>TBLANK=0x00</code> change</li>
+<li>[x] Determine whether current mode on resistive heaters is only a coarse limiter or can be made meaningfully setpoint-accurate</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md41"></a>
+<h2><a class="anchor" id="autotoc_md42"></a>
+17.1 Manual Bench Test Scenarios</h2>
+<ul>
+<li>[x] Shared-SPI bring-up:<ul>
+<li>Confirm other SPI devices are explicitly deselected before <code>driver.begin()</code></li>
+<li>Confirm <a class="el" href="classDRV8704.html" title="Arduino-facing DRV8704 device driver class.">DRV8704</a> active-high <code>SCS</code> does not interfere with other active-low devices</li>
+</ul>
+</li>
+<li>[x] Cold-start health-check on hardware:<ul>
+<li>Power-cycle <code>VM/VBUS</code></li>
+<li>Run <code>RegisterHealthCheck</code></li>
+<li>Confirm <code>TORQUE</code>, <code>OFF</code>, <code>BLANK</code>, <code>DECAY</code>, and <code>DRIVE</code> reset defaults match</li>
+<li>Confirm <code>CTRL</code> reset default matches <code>0x0301</code></li>
+</ul>
+</li>
+<li>[x] SPI communication plausibility:<ul>
+<li>Confirm write/readback probe passes</li>
+<li>Confirm raw register reads are not stuck at <code>0x0000</code> or <code>0x0FFF</code></li>
+</ul>
+</li>
+<li>[x] Supply and UVLO behavior:<ul>
+<li>Reproduce UVLO with overly aggressive bench current limit</li>
+<li>Confirm UVLO clears when supply current limit is increased</li>
+<li>Confirm <code>clearFaults()</code> does not report persistent UVLO once supply is healthy</li>
+</ul>
+</li>
+<li>[ ] Current-limit derivation:<ul>
+<li>With known shunt value, request at least three currents in-range</li>
+<li>Record selected gain, torque DAC, and reported current resolution</li>
+<li>Verify requests above achievable range are rejected cleanly</li>
+</ul>
+</li>
+<li>[ ] Preset sanity check:<ul>
+<li>Print preset-derived <code>TOFF</code>, <code>TBLANK</code>, <code>DECMOD</code>, <code>TDECAY</code>, and dead time</li>
+<li>Compare heater / TEC / motor presets for expected relative aggressiveness</li>
+<li>Repeat at low PWM frequency and high PWM frequency to confirm preset adjustment</li>
+<li>Repeat heater-pad bench tuning after any future preset changes</li>
+</ul>
+</li>
+<li>[ ] Current-drive functional test:<ul>
+<li>Set direction explicitly</li>
+<li>Enter current-drive with a conservative current limit</li>
+<li>Verify <code>coast()</code> and <code>brake()</code> immediately override drive</li>
+<li>Verify changing direction requires <code>setDirection(...)</code></li>
+</ul>
+</li>
+<li>[ ] PWM-with-current-limit functional test:<ul>
+<li>Set current limit first</li>
+<li>Start PWM mode and confirm achieved frequency / duty resolution report</li>
+<li>Verify <code>setSpeed(..., 0)</code> coasts</li>
+<li>Verify <code>setSpeed(..., 100)</code> drives constant-on without PWM toggling</li>
+<li>Verify current limit remains active during PWM drive</li>
+</ul>
+</li>
+<li>[ ] Direction and mode-transition test:<ul>
+<li>Confirm <code>setCurrent(...)</code> does not change direction</li>
+<li>Confirm <code>setSpeed(...)</code> does not change direction</li>
+<li>Confirm last command wins per bridge</li>
+<li>Confirm transitions between <code>Coast</code>, <code>Brake</code>, <code>CurrentDrive</code>, and <code>PwmDriveWithCurrentLimit</code></li>
+</ul>
+</li>
+<li>[ ] Fault handling test:<ul>
+<li>Confirm <code>readStatus()</code> matches <code>FAULTn</code></li>
+<li>Confirm <code>clearFaults()</code> and <code>clearFault(...)</code> behave sensibly</li>
+<li>If safe, induce one known fault and confirm it is reported and clears correctly</li>
+</ul>
+</li>
+<li>[ ] Platform compile matrix:<ul>
+<li>Compile <code>RegisterHealthCheck</code> on ESP32</li>
+<li>Compile <code>CurrentModeDemo</code> on ESP32</li>
+<li>Compile <code>PwmModeDemo</code> on ESP32</li>
+<li>Compile PWM example on Teensy</li>
+<li>Compile PWM example on STM</li>
+</ul>
+</li>
+<li>[ ] Logger behavior:<ul>
+<li>Confirm <code>LOG_LEVEL_INFO</code> shows pass/fail bring-up steps</li>
+<li>Confirm failures produce <code>LOGE(...)</code> messages with enough diagnostic detail</li>
+</ul>
+</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md43"></a>
 18. Implementation Order</h1>
 <ol type="1">
 <li>Preserve the working base driver and completed examples. <code>[done]</code></li>
@@ -474,8 +559,14 @@ $(document).ready(function(){initNavTree('md_TODO.html',''); initResizable(); })
 <li>Update presets for PWM-frequency-aware tuning. <code>[done]</code></li>
 <li>Rework examples around the new control model. <code>[done]</code></li>
 <li>Re-read and clean up the README after implementation stabilizes. <code>[done]</code></li>
-<li>Run compile and hardware validation on supported targets. </li>
+<li>Run compile and hardware validation on supported targets.</li>
 </ol>
+<h1><a class="anchor" id="autotoc_md44"></a>
+19. Follow-On Example Work</h1>
+<ul>
+<li>[x] Create a consolidated example program that exercises all major <a class="el" href="classDRV8704.html" title="Arduino-facing DRV8704 device driver class.">DRV8704</a> modes from one serial console</li>
+<li>[x] Add <code>PWM_Test.ino</code> with a command style parallel to <code>Current_Test.ino</code> </li>
+</ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

@@ -26,7 +26,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">UUtzinger_DRV8704
-   &#160;<span id="projectnumber">0.1.0</span>
+   &#160;<span id="projectnumber">0.1.1</span>
    </div>
    <div id="projectbrief">Arduino library for the DRV8704 dual H-bridge gate driver</div>
   </td>
@@ -87,7 +87,7 @@ $(document).ready(function(){initNavTree('md_DRV8704_DRIVER_REQUIREMENTS.html','
 <div class="title"><a class="el" href="classDRV8704.html" title="Arduino-facing DRV8704 device driver class.">DRV8704</a> Driver Requirements and Implementation Plan </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="autotoc_md43"></a>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md46"></a>
 1. Purpose</h1>
 <p>This document defines the requirements and development plan for a new Arduino-style driver for the Texas Instruments <a class="el" href="classDRV8704.html" title="Arduino-facing DRV8704 device driver class.">DRV8704</a> dual H-bridge PWM gate driver.</p>
 <p>The existing implementation in <code>src/drv.h</code> and <code>src/drv.cpp</code> is treated as a previous attempt and should be replaced rather than extended.</p>
@@ -98,7 +98,7 @@ $(document).ready(function(){initNavTree('md_DRV8704_DRIVER_REQUIREMENTS.html','
 <li>The documentation and script tooling used in <code>~/Documents/GitHub/BioMedicalSensorBoard/Arduino/libraries/UUtzinger_MAX30001G</code></li>
 </ul>
 <p>Note: the reference file in <code>assets</code> is <code>drv8704.pdf</code>, not <code>drv8740.pfd</code>.</p>
-<h1><a class="anchor" id="autotoc_md44"></a>
+<h1><a class="anchor" id="autotoc_md47"></a>
 2. Device Summary</h1>
 <p>The <a class="el" href="classDRV8704.html" title="Arduino-facing DRV8704 device driver class.">DRV8704</a> is not a complete motor driver with integrated power FETs. It is a dual brushed-DC motor gate driver for external N-channel MOSFET H-bridges.</p>
 <p>The device has two kinds of control surfaces:</p>
@@ -127,7 +127,7 @@ $(document).ready(function(){initNavTree('md_DRV8704_DRIVER_REQUIREMENTS.html','
 <li>SPI is used for configuration, diagnostics, current-regulation tuning, and fault/status handling.</li>
 <li>A higher-level driver may still generate those GPIO PWM signals internally on supported MCUs such as ESP32 and Teensy.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md45"></a>
+<h1><a class="anchor" id="autotoc_md48"></a>
 3. Design Goals</h1>
 <p>The new driver should:</p>
 <ul>
@@ -140,10 +140,11 @@ $(document).ready(function(){initNavTree('md_DRV8704_DRIVER_REQUIREMENTS.html','
 <li>Support both configuration-time use and runtime motor control support.</li>
 <li>Provide a high-level current-control mode where the user commands direction and current in amperes.</li>
 <li>Provide a hardware PWM mode for supported MCU families where the user commands direction and speed in percent.</li>
+<li>Integrate with <code>UUtzinger_logger</code> so bring-up and failure modes can be diagnosed over serial logging.</li>
 <li>Keep hardware-specific logic contained and easy to test.</li>
 <li>Avoid hidden global state.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md46"></a>
+<h1><a class="anchor" id="autotoc_md49"></a>
 4. Non-Goals</h1>
 <p>The first replacement version should not try to solve system-level motor control beyond the <a class="el" href="classDRV8704.html" title="Arduino-facing DRV8704 device driver class.">DRV8704</a> itself.</p>
 <p>Out of scope for the base driver:</p>
@@ -155,9 +156,9 @@ $(document).ready(function(){initNavTree('md_DRV8704_DRIVER_REQUIREMENTS.html','
 <li>RTOS-specific abstractions</li>
 <li>Generic multi-platform HAL support beyond Arduino SPI/GPIO and explicitly supported PWM backends</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md47"></a>
+<h1><a class="anchor" id="autotoc_md50"></a>
 5. Functional Requirements</h1>
-<h1><a class="anchor" id="autotoc_md48"></a>
+<h1><a class="anchor" id="autotoc_md51"></a>
 5.1 Initialization and Lifecycle</h1>
 <p>The driver shall:</p>
 <ul>
@@ -174,9 +175,10 @@ $(document).ready(function(){initNavTree('md_DRV8704_DRIVER_REQUIREMENTS.html','
 <li>Support bringing the device out of sleep</li>
 <li>Support hardware reset if a reset pin is provided</li>
 <li>Read and cache initial register contents after startup</li>
+<li>Log key bring-up steps and failures during <code>begin()</code> using <code>UUtzinger_logger</code></li>
 <li>Provide <code>end()</code> or equivalent shutdown support if desired</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md49"></a>
+<h1><a class="anchor" id="autotoc_md52"></a>
 5.2 SPI Communication</h1>
 <p>The driver shall:</p>
 <ul>
@@ -191,9 +193,11 @@ $(document).ready(function(){initNavTree('md_DRV8704_DRIVER_REQUIREMENTS.html','
 </ul>
 </li>
 <li>Provide optional readback verification after writes</li>
-<li>Provide SPI health check to verify that device is attached by reading registers and write/readback in the driver begin function.</li>
+<li>Provide SPI health check to verify that device is attached by reading registers and performing a safe write/readback probe during <code>begin()</code></li>
+<li>Report mismatched default-register reads in hexadecimal during health-check failure logging</li>
+<li>Support use on a shared SPI bus where the <a class="el" href="classDRV8704.html" title="Arduino-facing DRV8704 device driver class.">DRV8704</a> driver manages only its own active-high <code>SCS</code> line and other devices must be deselected by the application or their respective drivers</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md50"></a>
+<h1><a class="anchor" id="autotoc_md53"></a>
 5.3 Register Model</h1>
 <p>The driver shall represent the documented registers explicitly:</p>
 <ul>
@@ -247,7 +251,7 @@ $(document).ready(function(){initNavTree('md_DRV8704_DRIVER_REQUIREMENTS.html','
 <li>typed enums for discrete settings</li>
 <li>optional register unions/structs for readable field access</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md51"></a>
+<h1><a class="anchor" id="autotoc_md54"></a>
 5.4 Core Register Configuration</h1>
 <p>The driver shall support configuration helpers for:</p>
 <ul>
@@ -271,7 +275,7 @@ $(document).ready(function(){initNavTree('md_DRV8704_DRIVER_REQUIREMENTS.html','
 <li><code>setGateDrive(const GateDriveConfig&amp; cfg)</code></li>
 </ul>
 <p>and avoid string arguments like <code>"slow"</code> or <code>"on"</code>.</p>
-<h1><a class="anchor" id="autotoc_md52"></a>
+<h1><a class="anchor" id="autotoc_md55"></a>
 5.5 Current Mode</h1>
 <p>The driver shall provide a high-level current-control mode that uses the <a class="el" href="classDRV8704.html" title="Arduino-facing DRV8704 device driver class.">DRV8704</a> internal current regulation.</p>
 <p>Requirements:</p>
@@ -315,7 +319,7 @@ $(document).ready(function(){initNavTree('md_DRV8704_DRIVER_REQUIREMENTS.html','
 <li>resulting current resolution in amperes per DAC count</li>
 <li>achievable maximum current for the selected shunt and gain</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md53"></a>
+<h1><a class="anchor" id="autotoc_md56"></a>
 5.6 Predefined Load Presets</h1>
 <p>The driver shall provide predefined timing/decay presets to simplify current-mode setup.</p>
 <p>Required preset families:</p>
@@ -341,7 +345,8 @@ $(document).ready(function(){initNavTree('md_DRV8704_DRIVER_REQUIREMENTS.html','
 <li>adjusting preset behavior for PWM-assisted operation based on requested PWM frequency</li>
 </ul>
 <p>The preset families listed above are sufficient for the first release. The implementation should prefer a small number of defensible preset families over a larger set of weakly justified variants.</p>
-<h1><a class="anchor" id="autotoc_md54"></a>
+<p>Preset guidance must be documented as hardware-facing starting values, not guaranteed optimal settings. Bench tuning on the real load may require revising one or more shipped presets, especially for weakly inductive or mostly resistive loads such as heaters and TEC assemblies.</p>
+<h1><a class="anchor" id="autotoc_md57"></a>
 5.7 PWM Input Mode and Platform PWM Generation</h1>
 <p>The driver shall provide a PWM-input operating mode for supported MCU platforms, but the high-level PWM mode shall always be framed as PWM with current limit rather than PWM without current limit.</p>
 <p>Requirements:</p>
@@ -357,6 +362,11 @@ $(document).ready(function(){initNavTree('md_DRV8704_DRIVER_REQUIREMENTS.html','
 <li>on Teensy and STM, the implementation should use hardware PWM facilities provided by the platform core</li>
 <li>the user shall be able to set PWM frequency in hertz</li>
 <li>the driver shall enforce an upper limit based on <a class="el" href="classDRV8704.html" title="Arduino-facing DRV8704 device driver class.">DRV8704</a> input capability and timer backend capability</li>
+</ul>
+<p>Example coverage should include:</p>
+<ul>
+<li>a current-mode interactive bench test example for serial current / direction changes and preset timing sweeps</li>
+<li>a separate PWM-focused interactive bench test example with a command style similar to the current-mode test program</li>
 <li>the user shall be able to command speed from <code>0</code> to <code>100</code></li>
 <li>the driver shall report the smallest achievable duty increment for the chosen PWM frequency and platform</li>
 <li>at speed <code>0</code>, the PWM input shall be off and the resulting bridge behavior shall match <code>coast</code></li>
@@ -377,7 +387,7 @@ $(document).ready(function(){initNavTree('md_DRV8704_DRIVER_REQUIREMENTS.html','
 <li><code>getDutyStepCounts()</code></li>
 </ul>
 <p>The driver shall document that this is open-loop duty control, not closed-loop speed regulation.</p>
-<h1><a class="anchor" id="autotoc_md55"></a>
+<h1><a class="anchor" id="autotoc_md58"></a>
 5.8 Runtime Bridge Control</h1>
 <p>Because bridge switching is controlled by <code>AIN1/AIN2/BIN1/BIN2</code>, the driver should optionally provide GPIO helpers for both bridges:</p>
 <ul>
@@ -409,7 +419,7 @@ $(document).ready(function(){initNavTree('md_DRV8704_DRIVER_REQUIREMENTS.html','
 <li>A per-bridge command API with explicit mode transitions</li>
 <li>Or a chip-level API with <code>BridgeA</code> and <code>BridgeB</code> selectors</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md56"></a>
+<h1><a class="anchor" id="autotoc_md59"></a>
 5.9 Fault and Status Handling</h1>
 <p>The driver shall:</p>
 <ul>
@@ -419,6 +429,7 @@ $(document).ready(function(){initNavTree('md_DRV8704_DRIVER_REQUIREMENTS.html','
 <li>Support clearing clearable latched faults by writing zero to relevant bits</li>
 <li>Respect datasheet behavior for auto-clearing conditions such as thermal shutdown and UVLO recovery</li>
 <li>Optionally monitor the <code>FAULTn</code> pin when provided</li>
+<li>Allow <code>begin()</code> to succeed when SPI communication is healthy even if a fault bit such as <code>UVLO</code> is active, while still logging the fault condition</li>
 </ul>
 <p>The driver should provide helpers such as:</p>
 <ul>
@@ -427,7 +438,7 @@ $(document).ready(function(){initNavTree('md_DRV8704_DRIVER_REQUIREMENTS.html','
 <li><code>clearFaults()</code></li>
 <li><code>clearFault(FaultBit bit)</code></li>
 </ul>
-<h1><a class="anchor" id="autotoc_md57"></a>
+<h1><a class="anchor" id="autotoc_md60"></a>
 5.10 Configuration Profiles</h1>
 <p>The driver should provide a top-level configuration structure that captures the device operating profile, for example:</p>
 <ul>
@@ -454,7 +465,7 @@ $(document).ready(function(){initNavTree('md_DRV8704_DRIVER_REQUIREMENTS.html','
 <li><code>PwmConfig</code></li>
 <li><code>LoadPresetConfig</code></li>
 </ul>
-<h1><a class="anchor" id="autotoc_md58"></a>
+<h1><a class="anchor" id="autotoc_md61"></a>
 5.11 Diagnostics and Validation</h1>
 <p>The driver should provide:</p>
 <ul>
@@ -463,6 +474,7 @@ $(document).ready(function(){initNavTree('md_DRV8704_DRIVER_REQUIREMENTS.html','
 <li>readback checking of configuration writes</li>
 <li>sanity checking on reserved bits</li>
 <li>simple health report structure</li>
+<li>serial logging of pass/fail bring-up steps at info/error level</li>
 </ul>
 <p>For current mode and PWM mode diagnostics, the driver should also report:</p>
 <ul>
@@ -470,7 +482,7 @@ $(document).ready(function(){initNavTree('md_DRV8704_DRIVER_REQUIREMENTS.html','
 <li>PWM frequency actually achieved by the timer backend</li>
 <li>duty-cycle resolution and smallest achievable increment</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md59"></a>
+<h1><a class="anchor" id="autotoc_md62"></a>
 5.12 Documentation Requirements</h1>
 <p>The project shall include a <code><a class="el" href="README_8md.html">README.md</a></code> in the project root.</p>
 <p>The README shall explain:</p>
@@ -480,6 +492,7 @@ $(document).ready(function(){initNavTree('md_DRV8704_DRIVER_REQUIREMENTS.html','
 <li>the purpose of the main driver functions</li>
 <li>the difference between SPI configuration functions and GPIO bridge-control functions</li>
 <li>required hardware connections</li>
+<li>shared-SPI considerations, including the <a class="el" href="classDRV8704.html" title="Arduino-facing DRV8704 device driver class.">DRV8704</a> active-high chip-select convention</li>
 <li>expected startup and usage flow</li>
 <li>example usage for initialization, configuration, and bridge control</li>
 <li>fault and status handling concepts</li>
@@ -502,7 +515,7 @@ $(document).ready(function(){initNavTree('md_DRV8704_DRIVER_REQUIREMENTS.html','
 <li><code>@details</code></li>
 <li><code>@ingroup</code></li>
 </ul>
-<h1><a class="anchor" id="autotoc_md60"></a>
+<h1><a class="anchor" id="autotoc_md63"></a>
 5.13 Documentation Scripts and Tooling</h1>
 <p>The <a class="el" href="classDRV8704.html" title="Arduino-facing DRV8704 device driver class.">DRV8704</a> project shall reuse the MAX30001G documentation/release tooling pattern.</p>
 <p>Requirements:</p>
@@ -517,7 +530,7 @@ $(document).ready(function(){initNavTree('md_DRV8704_DRIVER_REQUIREMENTS.html','
 <li><code>scripts/generate_docs.sh</code></li>
 <li><code>scripts/release_from_library_version.sh</code></li>
 </ul>
-<h1><a class="anchor" id="autotoc_md61"></a>
+<h1><a class="anchor" id="autotoc_md64"></a>
 5.14 Arduino Library Packaging Requirements</h1>
 <p>The project shall include the standard Arduino library files needed for GitHub hosting and Arduino library registration.</p>
 <p>Required packaging files and folders:</p>
@@ -549,7 +562,11 @@ $(document).ready(function(){initNavTree('md_DRV8704_DRIVER_REQUIREMENTS.html','
 <li>use an Arduino category appropriate for a motor-driver library</li>
 <li>list any required dependencies explicitly</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md62"></a>
+<p>Current dependency requirement:</p>
+<ul>
+<li><code>UUtzinger_logger</code></li>
+</ul>
+<h1><a class="anchor" id="autotoc_md65"></a>
 6. API Requirements</h1>
 <p>The public API should be Arduino-friendly and stable.</p>
 <p>Minimum expected public surface:</p>
@@ -568,6 +585,7 @@ $(document).ready(function(){initNavTree('md_DRV8704_DRIVER_REQUIREMENTS.html','
 <li>bridge direction helper</li>
 <li>PWM-with-current-limit helpers that accept frequency and speed in percent on supported platforms</li>
 <li>explicit <code>coast</code> and <code>brake</code> helpers or equivalent bridge-state commands</li>
+<li>serial logging during initialization and failure handling using <code>UUtzinger_logger</code></li>
 </ul>
 <p>Minimum expected high-level public capabilities:</p>
 <ul>
@@ -602,7 +620,7 @@ $(document).ready(function(){initNavTree('md_DRV8704_DRIVER_REQUIREMENTS.html','
 <li>exposing reserved register writes to sketches by default</li>
 <li>encouraging PWM-without-current-limit as a primary operating mode</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md63"></a>
+<h1><a class="anchor" id="autotoc_md66"></a>
 7. Proposed Source Structure</h1>
 <p>The structure should follow the style of <code>UUtzinger_MAX30001G</code>, meaning one main public header plus smaller headers and focused implementation units.</p>
 <p>Recommended replacement layout:</p>
@@ -631,7 +649,7 @@ $(document).ready(function(){initNavTree('md_DRV8704_DRIVER_REQUIREMENTS.html','
 <div class="line">  drv8704_pwm_teensy.cpp</div>
 <div class="line">  drv8704_pwm_stm.cpp</div>
 <div class="line">examples/</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md64"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md67"></a>
 7.1 File Responsibilities</h2>
 <p><code><a class="el" href="drv8704_8h.html" title="Public Arduino API for the DRV8704 dual H-bridge gate driver.">drv8704.h</a></code></p>
 <ul>
@@ -674,6 +692,7 @@ $(document).ready(function(){initNavTree('md_DRV8704_DRIVER_REQUIREMENTS.html','
 <li><code>wake()</code></li>
 <li><code>reset()</code></li>
 <li>top-level orchestration</li>
+<li>bring-up logging and health-check logging</li>
 </ul>
 <p><code><a class="el" href="drv8704__config_8cpp.html" title="Configuration helpers for the DRV8704 driver.">drv8704_config.cpp</a></code></p>
 <ul>
@@ -740,7 +759,7 @@ $(document).ready(function(){initNavTree('md_DRV8704_DRIVER_REQUIREMENTS.html','
 <li>release helper adapted from MAX30001G</li>
 <li>optionally refreshes docs as part of release flow</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md65"></a>
+<h1><a class="anchor" id="autotoc_md68"></a>
 8. Naming Requirements</h1>
 <p>Recommended naming:</p>
 <ul>
@@ -757,7 +776,7 @@ $(document).ready(function(){initNavTree('md_DRV8704_DRIVER_REQUIREMENTS.html','
 <li>inconsistent constructor signatures</li>
 <li>generic file names like <code>drv.cpp</code> and <code>drv.h</code></li>
 </ul>
-<h1><a class="anchor" id="autotoc_md66"></a>
+<h1><a class="anchor" id="autotoc_md69"></a>
 9. Behavioral Requirements</h1>
 <p>The implementation shall:</p>
 <ul>
@@ -775,8 +794,10 @@ $(document).ready(function(){initNavTree('md_DRV8704_DRIVER_REQUIREMENTS.html','
 <li>make explicit how the user transitions between <code>Coast</code>, <code>Brake</code>, <code>CurrentDrive</code>, and <code>PwmDriveWithCurrentLimit</code></li>
 <li>avoid encouraging PWM-without-current-limit in the high-level API</li>
 <li>document that <a class="el" href="classDRV8704.html" title="Arduino-facing DRV8704 device driver class.">DRV8704</a> current-limit settings remain active when PWM drive is used unless explicitly changed</li>
+<li>manage only the <a class="el" href="classDRV8704.html" title="Arduino-facing DRV8704 device driver class.">DRV8704</a> chip-select line on a shared SPI bus</li>
+<li>report SPI bring-up success separately from fault presence during initialization</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md67"></a>
+<h1><a class="anchor" id="autotoc_md70"></a>
 10. Known Issues in Existing Attempt</h1>
 <p>The current <code>src/drv.h</code> and <code>src/drv.cpp</code> show several reasons to replace the implementation instead of reusing it directly:</p>
 <ul>
@@ -788,9 +809,9 @@ $(document).ready(function(){initNavTree('md_DRV8704_DRIVER_REQUIREMENTS.html','
 <li>design is register-centric but not structured around typed register definitions</li>
 <li>there is no clear separation between SPI transport, configuration, and status handling</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md68"></a>
+<h1><a class="anchor" id="autotoc_md71"></a>
 11. Development Plan</h1>
-<h1><a class="anchor" id="autotoc_md69"></a>
+<h1><a class="anchor" id="autotoc_md72"></a>
 Phase 1: Specification Freeze</h1>
 <ul>
 <li>Confirm public class name</li>
@@ -805,7 +826,7 @@ Phase 1: Specification Freeze</h1>
 <ul>
 <li>This requirements document</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md70"></a>
+<h1><a class="anchor" id="autotoc_md73"></a>
 Phase 2: Source Skeleton</h1>
 <ul>
 <li>Replace <code>drv.h</code> and <code>drv.cpp</code> with the new file structure</li>
@@ -826,7 +847,7 @@ Phase 2: Source Skeleton</h1>
 <ul>
 <li>Buildable library skeleton with documentation tooling scaffold</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md71"></a>
+<h1><a class="anchor" id="autotoc_md74"></a>
 Phase 3: SPI and Register Layer</h1>
 <ul>
 <li>Implement SPI frame transfer</li>
@@ -838,7 +859,7 @@ Phase 3: SPI and Register Layer</h1>
 <ul>
 <li>Verified register communication layer</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md72"></a>
+<h1><a class="anchor" id="autotoc_md75"></a>
 Phase 4: Configuration Layer</h1>
 <ul>
 <li>Implement typed setters/getters for all documented configuration fields</li>
@@ -853,7 +874,7 @@ Phase 4: Configuration Layer</h1>
 <ul>
 <li>Full configuration API</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md73"></a>
+<h1><a class="anchor" id="autotoc_md76"></a>
 Phase 5: Status and Fault Layer</h1>
 <ul>
 <li>Implement status decode</li>
@@ -865,7 +886,7 @@ Phase 5: Status and Fault Layer</h1>
 <ul>
 <li>Full diagnostics/fault API</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md74"></a>
+<h1><a class="anchor" id="autotoc_md77"></a>
 Phase 6: Bridge Control Layer</h1>
 <ul>
 <li>Implement GPIO helpers for bridge A and B</li>
@@ -879,7 +900,7 @@ Phase 6: Bridge Control Layer</h1>
 <ul>
 <li>Runtime bridge-control API</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md75"></a>
+<h1><a class="anchor" id="autotoc_md78"></a>
 Phase 7: Examples and Validation</h1>
 <ul>
 <li>Add a basic initialization example</li>
@@ -894,7 +915,7 @@ Phase 7: Examples and Validation</h1>
 <ul>
 <li>Usable examples, generated docs, and bring-up workflow</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md76"></a>
+<h1><a class="anchor" id="autotoc_md79"></a>
 12. Acceptance Criteria</h1>
 <p>The first replacement driver is acceptable when:</p>
 <ul>
@@ -922,7 +943,7 @@ Phase 7: Examples and Validation</h1>
 <li>the library structure is modular and matches the example style closely enough to be maintainable</li>
 <li>the old <code>drv</code> implementation is no longer needed</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md77"></a>
+<h1><a class="anchor" id="autotoc_md80"></a>
 13. Recommended Next Step</h1>
 <p>Next, use this document to create the replacement source skeleton in <code>src/</code>, starting with:</p>
 <ul>

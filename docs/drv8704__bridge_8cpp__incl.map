@@ -1,11 +1,12 @@
 <map id="src/drv8704_bridge.cpp" name="src/drv8704_bridge.cpp">
-<area shape="rect" id="node1" title="Runtime bridge GPIO helpers for the DRV8704 driver." alt="" coords="148,5,305,32"/>
-<area shape="rect" id="node2" href="$drv8704_8h.html" title="Public Arduino API for the DRV8704 dual H&#45;bridge gate driver." alt="" coords="271,80,350,107"/>
-<area shape="rect" id="node9" href="$drv8704__pwm_8h.html" title="Shared abstraction for platform PWM generation backends." alt="" coords="109,80,224,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,155,83,181"/>
-<area shape="rect" id="node4" title=" " alt="" coords="518,229,573,256"/>
-<area shape="rect" id="node5" href="$drv8704__defs_8h.html" title="Constants, register addresses, masks, and defaults for the DRV8704 driver." alt="" coords="443,155,554,181"/>
-<area shape="rect" id="node7" href="$drv8704__types_8h.html" title="Public enums and data structures for the DRV8704 driver." alt="" coords="107,155,226,181"/>
-<area shape="rect" id="node8" href="$drv8704__regs__typedefs_8h.html" title="Typed register views for the DRV8704 register set." alt="" coords="251,155,419,181"/>
-<area shape="rect" id="node6" title=" " alt="" coords="302,229,367,256"/>
+<area shape="rect" id="node1" title="Runtime bridge GPIO helpers for the DRV8704 driver." alt="" coords="173,5,330,32"/>
+<area shape="rect" id="node2" href="$drv8704_8h.html" title="Public Arduino API for the DRV8704 dual H&#45;bridge gate driver." alt="" coords="91,80,169,107"/>
+<area shape="rect" id="node9" href="$drv8704__pwm_8h.html" title="Shared abstraction for platform PWM generation backends." alt="" coords="194,80,309,107"/>
+<area shape="rect" id="node10" title=" " alt="" coords="333,80,399,107"/>
+<area shape="rect" id="node3" title=" " alt="" coords="310,155,387,181"/>
+<area shape="rect" id="node4" title=" " alt="" coords="5,304,60,331"/>
+<area shape="rect" id="node5" href="$drv8704__defs_8h.html" title="Constants, register addresses, masks, and defaults for the DRV8704 driver." alt="" coords="24,229,135,256"/>
+<area shape="rect" id="node7" href="$drv8704__types_8h.html" title="Public enums and data structures for the DRV8704 driver." alt="" coords="168,155,287,181"/>
+<area shape="rect" id="node8" href="$drv8704__regs__typedefs_8h.html" title="Typed register views for the DRV8704 register set." alt="" coords="159,229,327,256"/>
+<area shape="rect" id="node6" title=" " alt="" coords="211,304,276,331"/>
 </map>

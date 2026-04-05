@@ -2,8 +2,8 @@ var searchData=
 [
   ['tblank_314',['tblank',['../uniondrv8704__blank__reg__t.html#ae4d4f11666a7d67293c753ef602f6d49',1,'drv8704_blank_reg_t']]],
   ['tdecay_315',['tdecay',['../uniondrv8704__decay__reg__t.html#ab0ffb40cd409131f982038459d813a88',1,'drv8704_decay_reg_t']]],
-  ['tdriven_316',['tDriveN',['../structGateDriveConfig.html#ae676081e7c290b1f7a23e84c543724f1',1,'GateDriveConfig']]],
-  ['tdriven_317',['tdriven',['../uniondrv8704__drive__reg__t.html#a910ecf5d0aa17c29a36a43d8bd9000a3',1,'drv8704_drive_reg_t']]],
+  ['tdriven_316',['tdriven',['../uniondrv8704__drive__reg__t.html#a910ecf5d0aa17c29a36a43d8bd9000a3',1,'drv8704_drive_reg_t']]],
+  ['tdriven_317',['tDriveN',['../structGateDriveConfig.html#ae676081e7c290b1f7a23e84c543724f1',1,'GateDriveConfig']]],
   ['tdrivep_318',['tDriveP',['../structGateDriveConfig.html#ace9afe89567f764dfef30679e28a2de9',1,'GateDriveConfig']]],
   ['tdrivep_319',['tdrivep',['../uniondrv8704__drive__reg__t.html#a4b99807551413105ab00e019aaf52a46',1,'drv8704_drive_reg_t']]],
   ['teensyhardware_320',['TeensyHardware',['../drv8704__types_8h.html#a7820f894126ce05762b998b3befeee78ac072e3fec36d197e0e073acd743377cb',1,'drv8704_types.h']]],

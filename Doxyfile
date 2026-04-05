@@ -3,7 +3,7 @@
 DOXYFILE_ENCODING      = UTF-8
 PROJECT_NAME           = "UUtzinger_DRV8704"
 PROJECT_BRIEF          = "Arduino library for the DRV8704 dual H-bridge gate driver"
-PROJECT_NUMBER         = "0.1.0"
+PROJECT_NUMBER         = "0.1.1"
 OUTPUT_DIRECTORY       =
 CREATE_SUBDIRS         = NO
 ALLOW_UNICODE_NAMES    = YES
